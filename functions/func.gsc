@@ -163,16 +163,13 @@ on_player_revived()
 				self.health = self.myhealth;
 			}
 
-			if (map != "zm_buried" || map != "zm_highrise" || getdvar("g_gametype") != "zstandard")
+			if (map != "zm_buried" || map != "zm_highrise" || map != "zm_prison" || getdvar("g_gametype") != "zstandard")
 				self thread first_free_perks(); // give a perk or 2 back on maps with no perma perks
 		}
 	}
 }
 
-time_until_despawn()
-{
-	return 0;
-}
+time_until_despawn() {}
 
 revive_trigger_should_ignore_sight_checks( i )
 {
@@ -2423,5 +2420,48 @@ coop_pause()
 			}
 		}
 		wait 0.05;
+	}
+}
+
+transit_power()
+{
+//	replaceFunc( maps\mp\_zm_transit_utility::solo_tombstone_removal, ::solo_tombstone_removal_override );
+	level thread transit_power_local_electric_doors_globally();
+	
+	foreach( lava_pool in getentarray( "lava_damage", "targetname" ) )
+		lava_pool delete();
+}
+
+
+transit_power_local_electric_doors_globally()
+{
+	if( !(is_classic() && level.scr_zm_map_start_location == "transit") )
+	{
+		return;	
+	}
+
+	local_power = [];
+
+	for ( ;; )
+	{
+		flag_wait( "power_on" );
+
+		zombie_doors = getentarray( "zombie_door", "targetname" );
+		for ( i = 0; i < zombie_doors.size; i++ )
+		{
+			if ( isDefined( zombie_doors[i].script_noteworthy ) && zombie_doors[i].script_noteworthy == "local_electric_door" )
+			{
+				local_power[local_power.size] = maps\mp\zombies\_zm_power::add_local_power( zombie_doors[i].origin, 16 );
+			}
+		}
+
+		flag_waitopen( "power_on" );
+
+		for (i = 0; i < local_power.size; i++)
+		{
+			maps\mp\zombies\_zm_power::end_local_power( local_power[i] );
+			local_power[i] = undefined;
+		}
+		local_power = [];
 	}
 }

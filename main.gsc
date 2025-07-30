@@ -70,21 +70,21 @@ init()
 	level.zombie_vars["zombie_spawn_delay"] = 0;
 	level.zombie_vars["zombie_between_round_time"] = 0;
 
-	// old sliquifer
+	// prepatch sliquifer
 	level.zombie_vars["slipgun_max_kill_round"] = undefined;
 	level.zombie_vars["slipgun_reslip_rate"] = 0;
 
 	// change jug max health
 	level.zombie_vars["zombie_perk_juggernaut_health"] = 300;
 	level.zombie_vars["zombie_use_failsafe"] = 0;
-	set_zombie_var( "zombie_use_failsafe", 0 );
+	set_zombie_var("zombie_use_failsafe", 0);
 
 	level.chest_moves = 0; // box doesnt move (idk if this works)
 	level.limited_weapons = []; // everyone can get wonder weapons
 	level._limited_equipment = []; // everyone can get equipment
 	level.power_on = 1; // power is always on
 	level.a_e_slow_areas = []; // no mud slowdown on origins
-	level.custom_magic_box_timer_til_despawn = ::time_until_despawn;
+	level.custom_magic_box_timer_til_despawn = ::time_until_despawn; // weapons dont disappear out of box
 	level.revive_trigger_should_ignore_sight_checks = ::revive_trigger_should_ignore_sight_checks;
 	level thread on_player_connect();
 
@@ -102,6 +102,7 @@ init()
 	level thread powerup_drop_override(); // higher chance to drop powerups
 	// level thread coop_pause(); // allows pausing game with multiple people (doesnt work rn)
 	level thread fake_reset(); // reset game after 12h
+	level thread transit_power(); // remove lava pools & turn on power
 	// level thread tomb_upgrades();
 
     init_dvars(); // dvar settings
@@ -113,7 +114,7 @@ init()
 	
 	flag_wait( "start_zombie_round_logic" );
 	wait 0.05;
-	// automatically build everything
+	// automatically build everything except for plane parts (motd)
 	level thread buildbuildables();
 	level thread buildcraftables();
 }
@@ -152,16 +153,17 @@ on_player_spawned()
 
 setup_player()
 {
-	self.exosuits = true; 
-	self.hasPHD = true; 
+	self.hasPHD = true;
+	self.colorcycles = 1;
+	self.statusicon = "";
+	self.ignore_lava_damage = 1; // dont do lava damage
+
 	// self.sprint_boost = 0;
 	// self.jump_boost = 0;
 	// self.slam_boost = 0;
 	// self.exo_boost = 100;
-	self.colorcycles = 1;
-	self.statusicon = "";
-	self.ignore_lava_damage = 1;
-	
+	// self.exosuits = true; 
+
 	self init_client_dvars();
 	self thread max_ammo_refill_clip(); // bo4 max ammo
 	self thread map_colors(); // colors for hud
