@@ -167,17 +167,6 @@ player_name( player )
     return playerName;
 }
 
-/*
-randomWeaponz()
-{
-	if( !isDefined( self.randomweaponz ) )
-	{
-		self.randomweaponz = true;
-		self thread mapscores3();
-	}
-}
-*/
-
 buySingle()
 {
 	if( !isDefined( self.fercies ) )

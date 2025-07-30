@@ -109,7 +109,8 @@
 new_round_hud()
 {
 	level waittill("start_of_round");
-	switch(level.round_number) {
+	switch(level.round_number)
+	{
 		case 1:
 			roundCounter destroyElem();
 			roundCounter = createservericon("hud_chalk_1", 50, 50);
@@ -190,70 +191,8 @@ new_round_hud()
 	level waittill("between_round_over");
 }
 
-init_level_settings()
-{
-    level.perk_purchase_limit = 20;
-  	level.claymores_max_per_player = 35;  
-    level.player_out_of_playable_area_monitor = false;
-    level.player_too_many_weapons_monitor = false;
-	level.round_think_func = ::round_think;
-
-	level.zombie_include_weapons[ "slipgun_zm" ] = 1;
-	level.zombie_include_weapons[ "staff_air_zm" ] = 1;
-	level.zombie_include_weapons[ "staff_fire_zm" ] = 1;
-	level.zombie_include_weapons[ "staff_lightning_zm" ] = 1;
-	level.zombie_include_weapons[ "staff_water_zm" ] = 1;
-
-	level.zombie_weapons[ "slipgun_zm" ].is_in_box = 1;
-	level.zombie_weapons[ "staff_air_zm" ].is_in_box = 1;
-	level.zombie_weapons[ "staff_fire_zm" ].is_in_box = 1;
-	level.zombie_weapons[ "staff_lightning_zm" ].is_in_box = 1;
-	level.zombie_weapons[ "staff_water_zm" ].is_in_box = 1;
-
-	level.zombie_vars["zombie_spawn_delay"] = 0;
-	level.zombie_vars["zombie_between_round_time"] = 0;
-
-	level.zombie_vars["slipgun_max_kill_round"] = undefined;
-	level.zombie_vars["slipgun_reslip_rate"] = 0;
-
-	level.zombie_vars[ "zombie_perk_juggernaut_health" ] = 225;
-	
-	level.chest_moves = 0;
-	level.limited_weapons = [];
-	level._limited_equipment = [];
-	level.power_on = 1; 	
-
-    level thread fake_hitmarkers();
-	level thread change_box_price();
-	level thread change_pap_price();
-	level thread setup_commands();
-	level thread night_mode();
-	level thread overflow_fix();
-	level thread zombie_total();
-	level thread shared_box();
-	level thread perk_machine_quarter_change();
-	level thread turn_on_powerr();
-	level thread powerup_drop_override();
-	level thread coop_pause();
-	level thread fake_reset();
-
-	disable_high_round_walkers();
-	set_anim_pap_camo_dvars();
-
-	level thread onPlayerConnect();
-	
-	flag_wait( "start_zombie_round_logic" );
-
-	wait 0.05;
-
-	level thread buildbuildables();
-	level thread buildcraftables();
-
-}
-
 init_dvars()
 {
-
 	if (level.script == "zm_transit")
     {
 		setdvar("scr_screecher_ignore_player", 1); // denizens do not spawn
@@ -282,8 +221,11 @@ init_dvars()
 	setdvar("sv_patch_zm_weapons", 0);
 	setdvar("sv_fix_zm_weapons", 1);
 	setdvar("sv_voice", 2);
-	setdvar("sv_voiceQuality", 9);   
+	setdvar("sv_voiceQuality", 9);  
 
+	// custom dvars 
+	setdvar("rapid_fire", 1);
+	setdvar("eye_color", 1);
 	// buried is way too dark so lets not do it there
 	if (getdvar("mapname") != "zm_buried")
 		setdvar("night_mode", 1);
@@ -597,7 +539,7 @@ treasure_chest_weapon_spawn_override( chest, player, respin )
 	{
 		self.weapon_model_dw = spawn_weapon_model( rand, get_left_hand_weapon_model_name( rand ), self.weapon_model.origin - vectorScale( ( 0, 1, 0 ), 3 ), self.weapon_model.angles );
 	}
-    if ( getDvar( "magic_chest_movable" ) == "1" && !( isdefined( chest._box_opened_by_fire_sale ) && chest._box_opened_by_fire_sale ) && !( isdefined( level.zombie_vars["zombie_powerup_fire_sale_on"] ) && level.zombie_vars["zombie_powerup_fire_sale_on"] && self [[ level._zombiemode_check_firesale_loc_valid_func ]]() ) )
+    if ( getdvar( "magic_chest_movable" ) == "1" && !( isdefined( chest._box_opened_by_fire_sale ) && chest._box_opened_by_fire_sale ) && !( isdefined( level.zombie_vars["zombie_powerup_fire_sale_on"] ) && level.zombie_vars["zombie_powerup_fire_sale_on"] && self [[ level._zombiemode_check_firesale_loc_valid_func ]]() ) )
 	{
     	random = randomint( 100 );
 		if ( !isDefined( level.chest_min_move_usage ) )
@@ -869,23 +811,23 @@ treasure_chest_weapon_spawn_overridee( chest, player, respin ) //checked changed
 			{
 				rand = "ray_gun_zm";
 			}
-			else if( treasure_chest_canplayerreceiveweapon( player, "cymbal_monkey_zm", pap_triggers ) && getDvar("mapname") != "zm_prison")
+			else if( treasure_chest_canplayerreceiveweapon( player, "cymbal_monkey_zm", pap_triggers ) && getdvar("mapname") != "zm_prison")
 			{
 				rand = "cymbal_monkey_zm";
 			}
-			else if( treasure_chest_canplayerreceiveweapon( player, "blundergat_zm", pap_triggers ) && getDvar("mapname") == "zm_prison")
+			else if( treasure_chest_canplayerreceiveweapon( player, "blundergat_zm", pap_triggers ) && getdvar("mapname") == "zm_prison")
 			{
 				rand = "blundergat_zm";
 			}
-			else if( treasure_chest_canplayerreceiveweapon( player, "slowgun_zm", pap_triggers ) && getDvar( "mapname" ) == "zm_buried")
+			else if( treasure_chest_canplayerreceiveweapon( player, "slowgun_zm", pap_triggers ) && getdvar( "mapname" ) == "zm_buried")
 			{
 				rand = "slowgun_zm";
 			}
-			else if( treasure_chest_canplayerreceiveweapon( player, "emp_grenade_zm", pap_triggers ) && getDvar("mapname") == "zm_transit" && is_classic() )
+			else if( treasure_chest_canplayerreceiveweapon( player, "emp_grenade_zm", pap_triggers ) && getdvar("mapname") == "zm_transit" && is_classic() )
 			{
 				rand = "emp_grenade_zm";
 			}
-			else if( treasure_chest_canplayerreceiveweapon( player, "m32_zm", pap_triggers ) && getDvar("mapname") == "zm_tomb")
+			else if( treasure_chest_canplayerreceiveweapon( player, "m32_zm", pap_triggers ) && getdvar("mapname") == "zm_tomb")
 			{
 				rand = "m32_zm";
 			}
@@ -917,7 +859,7 @@ treasure_chest_weapon_spawn_overridee( chest, player, respin ) //checked changed
 	{
 		self.weapon_model_dw = spawn_weapon_model( rand, get_left_hand_weapon_model_name( rand ), self.weapon_model.origin - vectorScale( ( 0, 1, 0 ), 3 ), self.weapon_model.angles );
 	}
-	if ( getDvar( "magic_chest_movable" ) == "1" && !is_true( chest._box_opened_by_fire_sale ) && !is_true( level.zombie_vars[ "zombie_powerup_fire_sale_on" ] ) && self [[ level._zombiemode_check_firesale_loc_valid_func ]]() )
+	if ( getdvar( "magic_chest_movable" ) == "1" && !is_true( chest._box_opened_by_fire_sale ) && !is_true( level.zombie_vars[ "zombie_powerup_fire_sale_on" ] ) && self [[ level._zombiemode_check_firesale_loc_valid_func ]]() )
 	{
 		random = randomint( 100 );
 		if ( !isDefined(level.chest_max_move_usage) )
@@ -1339,7 +1281,7 @@ treasure_chest_canplayerreceiveperk( player, weapon )
     return 1;
 }
 
-doGivePerk(perk)
+add_perk(perk)
 {
     self endon("disconnect");
     self endon("death");
@@ -2337,8 +2279,8 @@ add_struct( s_struct )
 set_visionset()
 {
 	self useservervisionset(1);
-	self setvisionsetforplayer(GetDvar( "mapname" ), 1.0 );
-	// visionSetNaked( GetDvar( "mapname" ), 1.0 );
+	self setvisionsetforplayer(getdvar( "mapname" ), 1.0 );
+	// visionSetNaked( getdvar( "mapname" ), 1.0 );
 	// self setvisionsetforplayer("", 0 );
 }
 
@@ -2346,6 +2288,7 @@ graphic_tweaks()
 {
 	if( level.script != "zm_tomb")
 		self setclientdvar("r_fog", 0.3);
+
 	self setclientdvar("r_dof_enable", 0);
 	self setclientdvar("r_lodBiasRigid", -1000); // casues error when nocliping
 	self setclientdvar("r_lodBiasSkinned", -1000);
@@ -2378,21 +2321,21 @@ night_mode()
 
 night_mode_watcher()
 {	
-	if( getDvar( "night_mode") == "" )
+	if( getdvar( "night_mode") == "" )
 		setDvar( "night_mode", 0 );
 
 	wait 1;
 
 	while(1)
 	{
-		while( !getDvarInt( "night_mode" ) )
+		while( !getdvarint( "night_mode" ) )
 		{
 			wait 0.1;
 		}
 		self thread enable_night_mode();
 		self thread visual_fix();
 
-		while( getDvarInt( "night_mode" ) )
+		while( getdvarint( "night_mode" ) )
 		{
 			wait 0.1;
 		}
@@ -2403,13 +2346,13 @@ night_mode_watcher()
 enable_night_mode()
 {
 	if( !isDefined( level.default_r_exposureValue ) )
-		level.default_r_exposureValue = getDvar( "r_exposureValue" );
+		level.default_r_exposureValue = getdvar( "r_exposureValue" );
 	if( !isDefined( level.default_r_lightTweakSunLight ) )
-		level.default_r_lightTweakSunLight = getDvar( "r_lightTweakSunLight" );
+		level.default_r_lightTweakSunLight = getdvar( "r_lightTweakSunLight" );
 	if( !isDefined( level.default_r_sky_intensity_factor0 ) )
-		level.default_r_sky_intensity_factor0 = getDvar( "r_sky_intensity_factor0" );
+		level.default_r_sky_intensity_factor0 = getdvar( "r_sky_intensity_factor0" );
 	// if( !isDefined( level.default_r_sky_intensity_factor0 ) )
-	// 	level.default_r_lightTweakSunColor = getDvar( "r_lightTweakSunColor" );
+	// 	level.default_r_lightTweakSunColor = getdvar( "r_lightTweakSunColor" );
 
 	//self setclientdvar( "r_fog", 0 );
 	self setclientdvar( "r_filmUseTweaks", 1 );
@@ -2466,7 +2409,7 @@ visual_fix()
 	self endon( "disable_nightmode" );
 	if( level.script == "zm_buried" )
 	{
-		while( getDvar( "r_sky_intensity_factor0" ) != 0 )
+		while( getdvar( "r_sky_intensity_factor0" ) != 0 )
 		{	
 			self setclientdvar( "r_lightTweakSunLight", 1 );
 			self setclientdvar( "r_sky_intensity_factor0", 0 );
@@ -2475,9 +2418,9 @@ visual_fix()
 	}
 	else if( level.script == "zm_prison" || level.script == "zm_tomb" )
 	{
-		while( getDvar( "r_lightTweakSunLight" ) != 0 )
+		while( getdvar( "r_lightTweakSunLight" ) != 0 )
 		{
-			for( i = getDvar( "r_lightTweakSunLight" ); i >= 0; i = ( i - 0.05 ) )
+			for( i = getdvar( "r_lightTweakSunLight" ); i >= 0; i = ( i - 0.05 ) )
 			{
 				self setclientdvar( "r_lightTweakSunLight", i );
 				wait 0.05;
@@ -2529,21 +2472,21 @@ change_skydome()
 
 eye_color_watcher()
 {	
-	if( getDvar( "eye_color") == "" )
+	if( getdvar( "eye_color") == "" )
 		setDvar( "eye_color", 0 );
 
 	wait 1;
 
 	while(1)
 	{
-		while( !getDvarInt( "eye_color" ) )
+		while( !getdvarint( "eye_color" ) )
 		{
 			wait 0.1;
 		}
 		level setclientfield( "zombie_eye_change", 1 );
     	sndswitchannouncervox( "richtofen" );
 
-		while( getDvarInt( "eye_color" ) )
+		while( getdvarint( "eye_color" ) )
 		{
 			wait 0.1;
 		}
@@ -2553,12 +2496,13 @@ eye_color_watcher()
 }
 
 
-counter()
+zombie_counter()
 {
 	self endon("disconnect");
 
 	x = 5;
 	y = -119;
+
 	if (level.script == "zm_buried")
 	{
 		y -= 25;
@@ -2587,45 +2531,41 @@ counter()
 
 	while (1)
 	{
+		level endon("stop_updating_counter");
+		zombie_count = get_current_zombie_count();
+		if(zombie_count > 0)
+		{
+			counter setText(zombie_count + " zombies left");
+			counter.alpha = 1;
+		} 
+		else 
+		{
+			counter setText("waiting for zombies..");
+			wait_for_counter_change("stop_updating_counter");
+			counter.alpha = 1;
+    	}
 
-
-    level endon("stopUpdatingZombiesCounter");
-    zombiesCount = get_current_zombie_count();
-    if(zombiesCount > 0){
-        counter setText(zombiesCount + " zombies left");
-		counter.alpha = 1;
-        } else {
-
-        counter setText("no zombies");
-        waitForZombieCountChanged("stopUpdatingZombiesCounter");
-		counter.alpha = 1;
-    }
-
-			counter fadeovertime(4);
-			counter.alpha = 0;
-			
-			wait 4;
-			continue;
-			
+		counter fadeovertime(4);
+		counter.alpha = 0;
+		wait 4;
+		continue;		
 	}
-	
 }
 
-waitForZombieCountChanged(endonNotification){ //Thanks to CabConModding
+wait_for_counter_change(endonNotification)
+{ 
     level endon(endonNotification);
-    oldZombiesCount = get_current_zombie_count();
-    while(true){
-        newZombiesCount = get_current_zombie_count();
-        if(oldZombiesCount != newZombiesCount){
+    old_zombie_count = get_current_zombie_count();
+    while(true)
+	{
+        new_zombie_count = get_current_zombie_count();
+        if(old_zombie_count != new_zombie_count)
+		{
             return;
         }
         wait 0.05;
     }
 }
-
-
-
-
 
 destroy_on_intermission()
 {
@@ -2641,29 +2581,6 @@ destroy_on_intermission()
 
 	self destroy();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 shared_box()
 {
@@ -2996,51 +2913,51 @@ custom_treasure_chest_think()
                                 player playsound( "zmb_cha_ching" );
                                 if(self.zbarrier.weapon_string == "zombie_perk_bottle_revive" )
                                 {
-                                    player thread DoGivePerk("specialty_quickrevive");
+                                    player thread add_perk("specialty_quickrevive");
                                 }
                                 if(self.zbarrier.weapon_string == "zombie_perk_bottle_sleight")
                                 {
-                                    player thread DoGivePerk("specialty_fastreload");
+                                    player thread add_perk("specialty_fastreload");
                                 }
                                 if(self.zbarrier.weapon_string == "zombie_perk_bottle_doubletap" )
                                 {
-                                    player thread DoGivePerk("specialty_rof");
+                                    player thread add_perk("specialty_rof");
                                 }
                                 if(self.zbarrier.weapon_string == "zombie_perk_bottle_jugg")
                                 {
-                                    player thread DoGivePerk("specialty_armorvest");
+                                    player thread add_perk("specialty_armorvest");
                                 }
                                 if(self.zbarrier.weapon_string == "zombie_perk_bottle_marathon" )
                                 {
-                                    player thread DoGivePerk("specialty_longersprint");
+                                    player thread add_perk("specialty_longersprint");
                                 }
                                 if(self.zbarrier.weapon_string == "zombie_perk_bottle_tombstone")
                                 {
-                                    player thread DoGivePerk("specialty_scavenger");
+                                    player thread add_perk("specialty_scavenger");
                                 }
                                 if(self.zbarrier.weapon_string == "zombie_perk_bottle_deadshot" )
                                 {
-                                    player thread DoGivePerk("specialty_deadshot");
+                                    player thread add_perk("specialty_deadshot");
                                 }
                                 if(self.zbarrier.weapon_string == "zombie_perk_bottle_cherry")
                                 {
-                                    player thread DoGivePerk("specialty_grenadepulldeath");
+                                    player thread add_perk("specialty_grenadepulldeath");
                                 }
                                 if(self.zbarrier.weapon_string == "zombie_perk_bottle_nuke" )
                                 {
-                                    player thread DoGivePerk("specialty_flakjacket");
+                                    player thread add_perk("specialty_flakjacket");
                                 }
                                 if(self.zbarrier.weapon_string == "zombie_perk_bottle_additionalprimaryweapon")
                                 {
-                                    player thread DoGivePerk("specialty_additionalprimaryweapon");
+                                    player thread add_perk("specialty_additionalprimaryweapon");
                                 }
                                 if(self.zbarrier.weapon_string == "zombie_perk_bottle_vulture" )
                                 {
-                                    player thread DoGivePerk("specialty_nomotionsensor");
+                                    player thread add_perk("specialty_nomotionsensor");
                                 }
                                 if(self.zbarrier.weapon_string == "zombie_perk_bottle_whoswho")
                                 {
-                                    player thread DoGivePerk("specialty_finalstand");
+                                    player thread add_perk("specialty_finalstand");
                                 }
                             }
                             else
@@ -3062,51 +2979,51 @@ custom_treasure_chest_think()
                     grabber playsound( "zmb_cha_ching" );
                     if(self.zbarrier.weapon_string == "zombie_perk_bottle_revive" )
                     {
-                        grabber thread DoGivePerk("specialty_quickrevive");
+                        grabber thread add_perk("specialty_quickrevive");
                     }
                     if(self.zbarrier.weapon_string == "zombie_perk_bottle_sleight")
                     {
-                        grabber thread DoGivePerk("specialty_fastreload");
+                        grabber thread add_perk("specialty_fastreload");
                     }
                     if(self.zbarrier.weapon_string == "zombie_perk_bottle_doubletap" )
                     {
-                        grabber thread DoGivePerk("specialty_rof");
+                        grabber thread add_perk("specialty_rof");
                     }
                     if(self.zbarrier.weapon_string == "zombie_perk_bottle_jugg")
                     {
-                        grabber thread DoGivePerk("specialty_armorvest");
+                        grabber thread add_perk("specialty_armorvest");
                     }
                     if(self.zbarrier.weapon_string == "zombie_perk_bottle_marathon" )
                     {
-                        grabber thread DoGivePerk("specialty_longersprint");
+                        grabber thread add_perk("specialty_longersprint");
                     }
                     if(self.zbarrier.weapon_string == "zombie_perk_bottle_tombstone")
                     {
-                        grabber thread DoGivePerk("specialty_scavenger");
+                        grabber thread add_perk("specialty_scavenger");
                     }
                     if(self.zbarrier.weapon_string == "zombie_perk_bottle_deadshot" )
                     {
-                        grabber thread DoGivePerk("specialty_deadshot");
+                        grabber thread add_perk("specialty_deadshot");
                     }
                     if(self.zbarrier.weapon_string == "zombie_perk_bottle_cherry")
                     {
-                        grabber thread DoGivePerk("specialty_grenadepulldeath");
+                        grabber thread add_perk("specialty_grenadepulldeath");
                     }
                     if(self.zbarrier.weapon_string == "zombie_perk_bottle_nuke" )
                     {
-                        grabber thread DoGivePerk("specialty_flakjacket");
+                        grabber thread add_perk("specialty_flakjacket");
                     }
                     if(self.zbarrier.weapon_string == "zombie_perk_bottle_additionalprimaryweapon")
                     {
-                        grabber thread DoGivePerk("specialty_additionalprimaryweapon");
+                        grabber thread add_perk("specialty_additionalprimaryweapon");
                     }
                     if(self.zbarrier.weapon_string == "zombie_perk_bottle_vulture" )
                     {
-                        grabber thread DoGivePerk("specialty_nomotionsensor");
+                        grabber thread add_perk("specialty_nomotionsensor");
                     }
                     if(self.zbarrier.weapon_string == "zombie_perk_bottle_whoswho")
                     {
-                        grabber thread DoGivePerk("specialty_finalstand");
+                        grabber thread add_perk("specialty_finalstand");
                     }
                 }
 				else
@@ -3554,7 +3471,7 @@ struct_class_init_o()
 			level.struct_class_names[ "script_unitrigger_type" ][ s_struct.script_unitrigger_type ][ size ] = s_struct;
 		}
 	}
-	location = getDvar( "ui_zm_mapstartlocation" );
+	location = getdvar( "ui_zm_mapstartlocation" );
 	if ( location == "farm" )
 	{
 		register_perk_struct( "specialty_weapupgrade", "p6_anim_zm_buildable_pap_on", ( 0, 120, 0 ), ( 7764, -6322, 117 ) );
@@ -3575,7 +3492,7 @@ struct_class_init_o()
 
 register_perk_struct( perk_name, perk_model, perk_angles, perk_coordinates )
 {
-	if ( getDvar( "g_gametype" ) == "zgrief" && perk_name == "specialty_scavenger" )
+	if ( getdvar( "g_gametype" ) == "zgrief" && perk_name == "specialty_scavenger" )
 	{
 		return;
 	}
@@ -3605,19 +3522,19 @@ get_pack_a_punch_weapon_options_override( weapon ) //checked changed to match ce
 	smiley_face_reticle_index = 1;
 	base = get_base_name( weapon );
 	camo_index = 39;
-	if ( level.script == "zm_prison" && getDvarInt("anim_pap_camo_mob") )
+	if ( level.script == "zm_prison" && getdvarint("anim_pap_camo_mob") )
 	{
 		camo_index = 40;
 	}
-	else if ( level.script == "zm_buried" && getDvarInt("anim_pap_camo_buried") )
+	else if ( level.script == "zm_buried" && getdvarint("anim_pap_camo_buried") )
 	{
 		camo_index = 40;
 	}
 	else if ( level.script == "zm_tomb" )
 	{
-		if( getDvarInt("anim_pap_camo_origins") == 1 )
+		if( getdvarint("anim_pap_camo_origins") == 1 )
 			camo_index = 40;
-		if( getDvarInt("anim_pap_camo_origins") == 2 )
+		if( getdvarint("anim_pap_camo_origins") == 2 )
 			camo_index = 39;
 		else
 			camo_index = 45;

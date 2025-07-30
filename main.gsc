@@ -21,7 +21,6 @@
 /*
 	survival refactor - 7/27/25
 	code is super messy and i wanna work on this again
-
 */
 
 main()
@@ -107,6 +106,7 @@ init()
 	level thread powerup_drop_override(); // higher chance to drop powerups
 	level thread fake_reset(); // reset game after 12h
 	level thread transit_power(); // remove lava pools & turn on power
+	level thread eye_color_watcher();
 	// level thread coop_pause(); // allows pausing game with multiple people (doesnt work rn)
 
 	// dont init night mode on buried cause its way too dark
@@ -116,7 +116,7 @@ init()
     init_dvars(); // dvar settings
     init_wallbuy_changes(); // edit wallbuys
     phd_flopper_dmg_check(); // watch phd dive damage
-    zm_override(); // custom overrides
+    zm_override(); // override base game functions
 	disable_high_round_walkers(); // self explanitory
 	set_anim_pap_camo_dvars(); // motd camo on buried
 	
@@ -176,7 +176,6 @@ setup_player()
 	self thread disable_player_quotes(); // disable annoying voice lines
 	self thread max_ammo_refill_clip(); // bo4 max ammo
 	self thread map_colors(); // colors for hud
-	self thread counter(); // zombie counter
 	self thread name_status(); // check status
 	self thread perk_points(); // give points when drinking perks
 	self thread rapid_fire(); // allow pistol rapid firing
@@ -212,7 +211,7 @@ setup_player()
 		// setup clantags and health stuff
 		random_color = randomintrange( 1, 6 );
 		colors = random_color;
-		clantag_msg = strTok("buford  xd  34  1c  k2  swag  zZz  yo  zombie  ai  3arc  bot  mama  gg  xo  papa  baka  wdn  bdn  2", "  "); // Rewrite later 
+		clantag_msg = strTok("#wdn  buford  xd  34  1c  k2  swag  zZz  yo  zombie  ai  3arc  bot  mama  gg  xo  papa  baka  wdn  bdn  2", "  "); // Rewrite later 
 		clantag_randomize = RandomInt(clantag_msg.size);
 		clantag = "^" + colors + clantag_msg[clantag_randomize];
 		self.clantag = clantag;
@@ -230,6 +229,7 @@ setup_player()
 		self.health = health;
 
 		self thread timer_hud();
+		self thread zombie_counter(); // zombie counter
 		self thread graphic_tweaks();
 		self thread night_mode();
 		self thread rotate_skydome();

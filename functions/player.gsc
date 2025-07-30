@@ -241,7 +241,7 @@ reduce_player_fall_damage()
 
 player_damage_override( einflictor, eattacker, idamage, idflags, smeansofdeath, sweapon, vpoint, vdir, shitloc, psoffsettime )
 {
-	if (smeansofdeath == "MOD_FALLING" && !self hasPerk("specialty_flakjacket"))
+	if (smeansofdeath == "MOD_FALLING" && !self hasperk("specialty_flakjacket"))
 	{
 		// remove fall damage being based off max health
 		ratio = self.maxhealth / 100;
@@ -1675,32 +1675,25 @@ rapid_fire()
 
 jugg_perks()
 {
-	self endon( "disconnect" );
+	self endon("disconnect");
 
-	for ( ;; )
+	for (;;)
 	{
 		self waittill_any("perk_acquired", "perk_lost");
 
-		if (self HasPerk("specialty_armorvest"))
+		if (self hasperk("specialty_armorvest"))
 		{
-			self SetPerk("specialty_fallheight");
-			self SetPerk("specialty_explosivedamage");
-			self Setperk("specialty_bulletdamage");
-			self SetPerk("specialty_armorpiercing");
-
-			self SetNormalHealth(200);
-			self SetmaxHealth(200);
+			self setperk("specialty_fallheight");
+			self setperk("specialty_explosivedamage");
+			self setperk("specialty_bulletdamage");
+			self setperk("specialty_armorpiercing");
 		}
 		else
 		{
-
-
-			self UnsetPerk("specialty_fallheight");
-			self UnsetPerk("specialty_explosivedamage");
-			self UnsetPerk("specialty_bulletdamage");
-			self UnsetPerk("specialty_armorpiercing");
-	
-
+			self unsetperk("specialty_fallheight");
+			self unsetperk("specialty_explosivedamage");
+			self unsetperk("specialty_bulletdamage");
+			self unsetperk("specialty_armorpiercing");
 		}
 	}
 }
@@ -1715,7 +1708,7 @@ staminup_perks()
 	{
 		self waittill_any("perk_acquired", "perk_lost");
 
-		if (self HasPerk("specialty_longersprint"))
+		if (self hasperk("specialty_longersprint"))
 		{
 
         self setperk("specialty_movefaster");
@@ -1735,6 +1728,7 @@ staminup_perks()
 		}
 	}
 }
+
 speed_perks()
 {
 	self endon( "disconnect" );
@@ -1743,18 +1737,18 @@ speed_perks()
 	{
 		self waittill_any("perk_acquired", "perk_lost");
 
-		if (self HasPerk("specialty_fastreload"))
+		if (self hasperk("specialty_fastreload"))
 		{
-			self SetPerk("specialty_fastads");
-			self SetPerk("specialty_fastweaponswitch");
-			self Setperk("specialty_fasttoss");
+			self setperk("specialty_fastads");
+			self setperk("specialty_fastweaponswitch");
+			self setperk("specialty_fasttoss");
 			
 		}
 		else
 		{
-			self UnsetPerk("specialty_fastads");
-			self UnsetPerk("specialty_fastweaponswitch");
-			self Unsetperk("specialty_fasttoss");
+			self unsetperk("specialty_fastads");
+			self unsetperk("specialty_fastweaponswitch");
+			self unsetperk("specialty_fasttoss");
 		}
 	}
 }
@@ -1785,8 +1779,6 @@ max_ammo_refill_clip()
 		}
 	}
 }
-
-
 
 set_persistent_stats()
 {
@@ -1839,7 +1831,6 @@ set_perma_perks() // Huthtv
 	}
 }
 
-
 set_bank_points()
 {
 	if (self.account_value < 1100000)
@@ -1848,8 +1839,6 @@ set_bank_points()
 		self.account_value = 1100000;
 	}
 }
-
-
 
 do_hitmarker_death()
 {
@@ -1922,7 +1911,6 @@ faster_grenades()
 	}
 }
 
-
 g_explode()
 {
 
@@ -1944,9 +1932,6 @@ fake_hitmarkers()
     
     for( ;; )
     {
-
-
-		
         level waittill( "connected", player );
         player.hud_damagefeedback = newdamageindicatorhudelem( player );
     	player.hud_damagefeedback.horzalign = "center";

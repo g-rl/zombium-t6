@@ -1211,7 +1211,7 @@ treasure_chest_canplayerreceiveperk( player, weapon )
     return 1;
 }
 
-doGivePerk(perk)
+add_perk(perk)
 {
     self endon("disconnect");
     self endon("death");
