@@ -19,11 +19,6 @@ get_player_weapon_limit_override( player ) //checked matches cerberus output
 	// }
 
 	map = getdvar("mapname");
-	
-    if (map == "zm_tomb" || map == "zm_buried" || map == "zm_highrise")
-		weapon_limit = 2;
-	else
-		weapon_limit = 3;
-
+	weapon_limit = 3;
 	return weapon_limit;
 }

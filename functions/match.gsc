@@ -354,11 +354,10 @@ zombie_total()
 	{
 		level waittill("start_of_round");
 
-        
 		if(level.round_number > 5)
 		{
-			level.zombie_total = 30;
-			self waittill("spawned_player");
+			level.zombie_total = 55;
+			// self waittill("spawned_player");
 		}
 	}
 }

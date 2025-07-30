@@ -91,9 +91,9 @@ init()
     level thread fake_hitmarkers();
 	level thread cycle_box_price(); // cycle random box price
 	level thread setup_commands(); // command system (prefix is .)
-	level thread night_mode(); // init night mode on all maps
+	if (getdvar("mapname") != "zm_buried") level thread night_mode(); // init night mode on all maps
 	level thread overflow_fix(); // hud updates a lot
-	level thread zombie_total(); // 24 zombies allowed to spawn at once
+	// level thread zombie_total(); // 24 zombies allowed to spawn at once
 	level thread shared_box(); // allows for other people to pickup weapons
 	level thread new_round_hud();
 	level thread perk_machine_quarter_change(); // prone for perk points
