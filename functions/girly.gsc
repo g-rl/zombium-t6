@@ -185,9 +185,6 @@ actor_killed_override(einflictor, attacker, idamage, smeansofdeath, sweapon, vdi
 
 draw_killtext() //Rank Up System (Text) Made By ZECxR3ap3r & John Kramer (Project / Custom Map Nacht)
 {
-    if(self.color == undefined)
-        self.color = "^3";
-
     if ( isdefined( self.xp_score ) )
     {
         self notify( "added_score" );
@@ -196,12 +193,6 @@ draw_killtext() //Rank Up System (Text) Made By ZECxR3ap3r & John Kramer (Projec
     }
     else
         self.xp_score = 75;
-
-    /*
-    if(!isdefined(self.xptext))
-        self.xptext = "+" + self.xp_score + " XP^7 ";
-    */
-    
     self endon( "added_score" );
     self.xptext = "+" + self.xp_score + " XP^7 ";
     self.xp_hint = newclienthudelem( self );
@@ -232,7 +223,7 @@ draw_killtext() //Rank Up System (Text) Made By ZECxR3ap3r & John Kramer (Projec
     self.xp_hint fadeovertime( 0.25 );
     self.xp_hint.alpha = 0;
     wait .25;
-
+    self.xp_hint destroy();
     self.xp_score destroy();
     self.xp_score = undefined;
 }
