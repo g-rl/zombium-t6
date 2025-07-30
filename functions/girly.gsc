@@ -261,7 +261,6 @@ zm_override()
 	replaceFunc( maps\mp\zombies\_zm_spawner::zombie_rise_death, ::zombie_rise_death_override );
 	replaceFunc( maps\mp\zombies\_zm::round_think, ::round_think_override );
 	replaceFunc( maps\mp\zombies\_zm::ai_calculate_health, ::ai_calculate_health_override );
-	replaceFunc( maps\mp\zombies\_zm_powerups::free_perk_powerup, ::free_perk_powerup_override );
 	replacefunc(maps\mp\zombies\_zm::ai_calculate_health, ::ai_calculate_health);
 	replacefunc(maps\mp\zombies\_zm_perks::use_solo_revive, ::use_solo_revive);
 	replacefunc(maps\mp\zombies\_zm_spawner::should_attack_player_thru_boards, ::should_attack_player_thru_boards);
@@ -272,6 +271,7 @@ zm_override()
 	replaceFunc( maps\mp\zombies\_zm_powerups::insta_kill_on_hud, ::insta_kill_on_hud_override );
 	replaceFunc( maps\mp\zombies\_zm_powerups::powerup_drop, ::powerup_drop_override );
 */
+	replaceFunc( maps\mp\zombies\_zm_powerups::free_perk_powerup, ::free_perk_powerup_override );
 	replaceFunc( maps\mp\zombies\_zm_weapons::get_pack_a_punch_weapon_options, ::get_pack_a_punch_weapon_options_override );
 	replaceFunc( maps\mp\zombies\_zm_weapons::weapon_give, ::weapon_give_override );
 	replaceFunc( maps\mp\zombies\_zm_powerups::powerup_drop, ::powerup_drop_override );
