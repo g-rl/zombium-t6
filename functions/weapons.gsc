@@ -19,6 +19,6 @@ get_player_weapon_limit_override( player ) //checked matches cerberus output
 	// }
 
 	map = getdvar("mapname");
-	weapon_limit = 3;
+	weapon_limit = 3; // idec will fix later
 	return weapon_limit;
 }

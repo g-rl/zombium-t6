@@ -25,12 +25,12 @@
 
 setup_commands()
 {
-	level thread onsayPlayer();	
+	level thread on_say_player();	
 	level thread sayMax();
 	level thread sayTag();
-
-//   unused as of now :
 	level thread sayPerk();
+
+	// unused as of now :
 	//level thread sayRound();
 	//level thread sayBots();
 	//level thread help();
@@ -80,7 +80,7 @@ changeTag( var )
 			self.clantag_color = "^" + colors;
 			self.clantag = clantag_a;
 
-			gp(colors + getPlayerName( self ) + " ^7has changed their clantag to " + "[" + self.clantag + "^7]!" );
+			gp(colors + player_name( self ) + " ^7has changed their clantag to " + "[" + self.clantag + "^7]!" );
 
 		}
 
@@ -94,7 +94,7 @@ changeTag( var )
 	}
 }
 
-onsayPlayer()
+on_say_player()
 {
     level endon("game_ended");    
     for(;;)
@@ -107,7 +107,7 @@ onsayPlayer()
             {
                 for( i = 0; i < level.players.size; i++ )
                 {
-                    if( isSubStr( tolower( getPlayerName( level.players[ i ] )), tolower(sayText[ 1 ] ) ))
+                    if( isSubStr( tolower( player_name( level.players[ i ] )), tolower(sayText[ 1 ] ) ))
                     {
                         value = int( sayText[ ( sayText.size - 1 ) ] );
                         if( value < 0 )
@@ -132,7 +132,7 @@ give_points( player, var )
 
 		self.giving_points = true;
 		if ( player.score == 1000000 )
-			self iPrintLn("[" + player.clantag + "^7] ^3" + getPlayerName( player ) + " ^7cannot accept this payment.");
+			self iPrintLn("[" + player.clantag + "^7] ^3" + player_name( player ) + " ^7cannot accept this payment.");
 		else if( var <= 0)
 		{
 			self thread imsg( "Enter a valid amount." );
@@ -141,9 +141,9 @@ give_points( player, var )
 		{
 			self maps\mp\zombies\_zm_score::minus_to_player_score( var, 1 );
 
-			self iPrintLn( colors + "$" + var + "^7 has been sent to [" + player.clantag + "^7] ^3" + getPlayerName( player ));
+			self iPrintLn( colors + "$" + var + "^7 has been sent to [" + player.clantag + "^7] ^3" + player_name( player ));
 			player maps\mp\zombies\_zm_score::add_to_player_score( var, 1 );
-			player iPrintLn( colors + "$" + var + " ^7was recieved from [" + self.clantag + "^7] ^3" + getPlayerName( self ));
+			player iPrintLn( colors + "$" + var + " ^7was recieved from [" + self.clantag + "^7] ^3" + player_name( self ));
 		}
 		else
 		self thread imsg( "Not enough points to do this!" );
@@ -153,7 +153,7 @@ give_points( player, var )
 	}
 }
 
-getPlayerName( player )
+player_name( player )
 {
     playerName = getSubStr( player.name, 0, player.name.size );
     for( i = 0; i < playerName.size; i++ )
@@ -229,9 +229,9 @@ sayMax()
         sayText = strtok(tolower(message), " ");        
         if(sayText[0]==".ammo" || sayText[0]==".maxammo" || sayText[0]==".max") //GivePoints
         {
-                	player buyMax();
-				}           
-        }       
+			player buyMax();
+		}       
+    }       
 }
 
 
@@ -250,7 +250,7 @@ sayRevive()
             {
                 for( i = 0; i < level.players.size; i++ )
                 {
-                    if( isSubStr( tolower( getPlayerName( level.players[ i ] )), tolower(sayText[ 1 ] ) ))
+                    if( isSubStr( tolower( player_name( level.players[ i ] )), tolower(sayText[ 1 ] ) ))
                     {
 						
                         value = string( sayText[ ( sayText.size - 1 ) ] );
@@ -310,7 +310,7 @@ reviveFunc(player)
 			player.ignoreme=false;
 			player allowjump(1);
 			player.laststand=undefined;
-			iPrintLn("[" + self.clantag + "^7] ^3" + getPlayerName( self ) + " ^7revived [" + player.clantag + "^7] ^3" + getPlayerName( player ) + "^7! (^2$3,750^7)");
+			iPrintLn("[" + self.clantag + "^7] ^3" + player_name( self ) + " ^7revived [" + player.clantag + "^7] ^3" + player_name( player ) + "^7! (^2$3,750^7)");
 		}
 		else
 			self iPrintln("^1(!)^7 this player does not need to be ^1revived^7!");

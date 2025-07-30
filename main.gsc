@@ -26,7 +26,8 @@
 
 main()
 {	
-	if(getdvar("mapname") != "zm_prison") // disabled in motd because afterlife doesnt work with it 
+	// disabled in motd because afterlife doesnt work with it 
+	if(getdvar("mapname") != "zm_prison")
 		maps\mp\zombies\_zm::register_player_damage_callback(::player_aat_damage_respond); // moved to main from init because of it not loading in origins
 
 	maps\mp\zombies\_zm_spawner::register_zombie_damage_callback(::aat_zombie_damage_response);
@@ -34,9 +35,9 @@ main()
 
 init()
 {
-    maps\mp\zombies\_zm_utility::onplayerconnect_callback(::watch_weapon_changes); // aat
-    thread new_pap_trigger(); // aat
-
+	// aat settings
+    maps\mp\zombies\_zm_utility::onplayerconnect_callback(::watch_weapon_changes); 
+    thread new_pap_trigger(); 
 	level._poi_override = ::turned_zombie; // allow turned zombies
     
     level.perk_purchase_limit = 20; // max perk limit
@@ -47,24 +48,30 @@ init()
     level.callbackactorkilled_og = level.callbackactorkilled;
     level.callbackactorkilled = ::actor_killed_override; 
 	
-	// sliquifer and staffs in box / remove guns
+	// sliquifer and staffs in box
 	level.zombie_include_weapons["slipgun_zm"] = 1;
 	level.zombie_include_weapons["staff_air_zm"] = 1;
 	level.zombie_include_weapons["staff_fire_zm"] = 1;
 	level.zombie_include_weapons["staff_lightning_zm"] = 1;
 	level.zombie_include_weapons["staff_water_zm"] = 1;
+
+	// remove shitty weapons
 	level.zombie_include_weapons["saritch_zm"] = 0; // remove smr completely
 	level.zombie_include_weapons["m32_zm"] = 0; // remove war machine completely
 	level.zombie_include_weapons["usrpg_zm"] = 0; // remove rpg completely
+	level.zombie_include_weapons["emp_grenade_zm"] = 0; // remove rpg completely
 
 	level.zombie_weapons["slipgun_zm"].is_in_box = 1;
 	level.zombie_weapons["staff_air_zm"].is_in_box = 1;
 	level.zombie_weapons["staff_fire_zm"].is_in_box = 1;
 	level.zombie_weapons["staff_lightning_zm"].is_in_box = 1;
 	level.zombie_weapons["staff_water_zm"].is_in_box = 1;
+
+	// remove shitty weapons from box
 	level.zombie_weapons["saritch_zm"].is_in_box = 0; // remove smr from box
 	level.zombie_weapons["m32_zm"].is_in_box = 0; // remove war machine from box
 	level.zombie_weapons["usrpg_zm"].is_in_box = 0; // remove rpg from box
+	level.zombie_weapons["emp_grenade_zm"].is_in_box = 0; // remove emps from box
 
 	// zombies spawn right away
 	level.zombie_vars["zombie_spawn_delay"] = 0;
@@ -77,6 +84,7 @@ init()
 	// change jug max health
 	level.zombie_vars["zombie_perk_juggernaut_health"] = 300;
 	level.zombie_vars["zombie_use_failsafe"] = 0;
+
 	set_zombie_var("zombie_use_failsafe", 0);
 
 	level.chest_moves = 0; // box doesnt move (idk if this works)
@@ -84,15 +92,13 @@ init()
 	level._limited_equipment = []; // everyone can get equipment
 	level.power_on = 1; // power is always on
 	level.a_e_slow_areas = []; // no mud slowdown on origins
-	level.custom_magic_box_timer_til_despawn = ::time_until_despawn; // weapons dont disappear out of box
+	// level.custom_magic_box_timer_til_despawn = ::time_until_despawn; // weapons dont disappear out of box
 	level.revive_trigger_should_ignore_sight_checks = ::revive_trigger_should_ignore_sight_checks;
 	level thread on_player_connect();
-
+	level thread overflow_fix(); // hud updates a lot
     level thread fake_hitmarkers();
 	level thread cycle_box_price(); // cycle random box price
 	level thread setup_commands(); // command system (prefix is .)
-	if (getdvar("mapname") != "zm_buried") level thread night_mode(); // init night mode on all maps
-	level thread overflow_fix(); // hud updates a lot
 	// level thread zombie_total(); // 24 zombies allowed to spawn at once
 	level thread shared_box(); // allows for other people to pickup weapons
 	level thread new_round_hud();
@@ -103,6 +109,10 @@ init()
 	level thread transit_power(); // remove lava pools & turn on power
 	// level thread coop_pause(); // allows pausing game with multiple people (doesnt work rn)
 
+	// dont init night mode on buried cause its way too dark
+	if (getdvar("mapname") != "zm_buried") 
+		level thread night_mode();
+
     init_dvars(); // dvar settings
     init_wallbuy_changes(); // edit wallbuys
     phd_flopper_dmg_check(); // watch phd dive damage
@@ -110,9 +120,9 @@ init()
 	disable_high_round_walkers(); // self explanitory
 	set_anim_pap_camo_dvars(); // motd camo on buried
 	
+	// automatically build everything except for plane parts (motd)
 	flag_wait( "start_zombie_round_logic" );
 	wait 0.05;
-	// automatically build everything except for plane parts (motd)
 	level thread buildbuildables();
 	level thread buildcraftables();
 }
@@ -136,7 +146,7 @@ on_player_connect()
 on_player_spawned()
 {
 	level endon("game_ended");
-	self endon( "disconnect" );
+	self endon("disconnect");
 
     self.first = true;
 
@@ -163,6 +173,7 @@ setup_player()
 	// self.exosuits = true; 
 
 	self init_client_dvars();
+	self thread disable_player_quotes(); // disable annoying voice lines
 	self thread max_ammo_refill_clip(); // bo4 max ammo
 	self thread map_colors(); // colors for hud
 	self thread counter(); // zombie counter
@@ -170,7 +181,7 @@ setup_player()
 	self thread perk_points(); // give points when drinking perks
 	self thread rapid_fire(); // allow pistol rapid firing
 	self thread war_machine_explode_on_impact(); // better war machine
-	self thread g_impact(); // faster grenade explosions
+	self thread faster_grenades(); // faster grenade explosions
 	self thread give_starting_points(); // random starting points
 	self thread set_persistent_stats(); // give all perma perks
 	// self thread bind_monitor(); // for location pinging / dropping weapons
@@ -195,7 +206,6 @@ setup_player()
 	self thread additionalprimaryweapon_restore_weapons();
 	self thread additionalprimaryweapon_indicator();
 	self thread additionalprimaryweapon_stowed_weapon_refill();
-	self thread disable_player_quotes(); // disable voice lines
 
 	if (isdefined(self.first) && self.first)
 	{
@@ -207,12 +217,14 @@ setup_player()
 		clantag = "^" + colors + clantag_msg[clantag_randomize];
 		self.clantag = clantag;
 		self.clantag_color = "^" + colors;
+
+		// health settings
 		random_health = randomintrange(125, 180);
 		health = random_health;
 		self.myhealth = health; // for welcome message
 		self.first = false;
 
-		// functions here
+		// functions to only run once
 		self setnormalhealth(health);
 		self setmaxhealth(health);
 		self.health = health;
@@ -221,10 +233,9 @@ setup_player()
 		self thread graphic_tweaks();
 		self thread night_mode();
 		self thread rotate_skydome();
-		// self thread health_bar_hud();
-		// self thread trap_timer_hud();
 		self thread welcome_message();
-		self iprintln("last update: ^3july 28th 2025");
+		self iprintln("^3@nyli2b");
+		self iprintln("last update: ^3july 30th 2025");
 	}
 	self thread first_free_perks();
 }

@@ -172,7 +172,7 @@ getRandomWeapz( var )
 			self maps\mp\zombies\_zm_score::minus_to_player_score( var, 1 );
             self thread giverandomweap();
 			
-		//gpb("[" + self.clantag + "^7] " + self.clantag_color + getPlayerName( self ) + " ^7has purchased a " + colors + "max ammo^7! (^2$45,000^7)");
+		//gpb("[" + self.clantag + "^7] " + self.clantag_color + player_name( self ) + " ^7has purchased a " + colors + "max ammo^7! (^2$45,000^7)");
 		} else if( self.score < self.mapscore_weapons )
 
 		{
@@ -190,7 +190,7 @@ getRandomWeapz( var )
 			self maps\mp\zombies\_zm_score::minus_to_player_score( var, 1 );
             self thread giverandomweap();
 			
-		//gpb("[" + self.clantag + "^7] " + self.clantag_color + getPlayerName( self ) + " ^7has purchased a " + colors + "max ammo^7! (^2$15,000^7)");
+		//gpb("[" + self.clantag + "^7] " + self.clantag_color + player_name( self ) + " ^7has purchased a " + colors + "max ammo^7! (^2$15,000^7)");
 		} else if( self.score < self.mapscore_weapons )
 
 		{
@@ -220,7 +220,7 @@ mapAmmo( var )
 			self maps\mp\zombies\_zm_score::minus_to_player_score( var, 1 );
             self thread full_ammo_powerup_override();
 			
-		gpb("[" + self.clantag + "^7] " + self.clantag_color + getPlayerName( self ) + " ^7has purchased a " + colors + "max ammo^7! (^2$45,000^7)");
+		gpb("[" + self.clantag + "^7] " + self.clantag_color + player_name( self ) + " ^7has purchased a " + colors + "max ammo^7! (^2$45,000^7)");
 		} else if( self.score < self.mapscore_ammo )
 
 		{
@@ -238,7 +238,7 @@ mapAmmo( var )
 			self maps\mp\zombies\_zm_score::minus_to_player_score( var, 1 );
             self thread full_ammo_powerup_override();
 			
-		gpb("[" + self.clantag + "^7] " + self.clantag_color + getPlayerName( self ) + " ^7has purchased a " + colors + "max ammo^7! (^2$15,000^7)");
+		gpb("[" + self.clantag + "^7] " + self.clantag_color + player_name( self ) + " ^7has purchased a " + colors + "max ammo^7! (^2$15,000^7)");
 		} else if( self.score < self.mapscore_ammo )
 
 		{
@@ -267,7 +267,7 @@ mapSinglePerk( var )
 		    self notify( "player_received_ghost_round_free_perk" );
       	    self thread play_sound_at_pos( "music_chest", self.origin );
 			
-		gpb("[" + self.clantag + "^7] " + self.clantag_color + getPlayerName( self ) + " ^7has purchased a " + colors + "random perk^7! (^2$3,750^7)");
+		gpb("[" + self.clantag + "^7] " + self.clantag_color + player_name( self ) + " ^7has purchased a " + colors + "random perk^7! (^2$3,750^7)");
 		} else if( self.score < self.mapscore_s )
 
 		{
@@ -287,7 +287,7 @@ mapSinglePerk( var )
 		    self notify( "player_received_ghost_round_free_perk" );
       	    self thread play_sound_at_pos( "music_chest", self.origin );
 			
-		gpb("[" + self.clantag + "^7] " + self.clantag_color + getPlayerName( self ) + " ^7has purchased a " + colors + "random perk^7! (^2$7,500^7)");
+		gpb("[" + self.clantag + "^7] " + self.clantag_color + player_name( self ) + " ^7has purchased a " + colors + "random perk^7! (^2$7,500^7)");
 		} else if( self.score < self.mapscore_s )
 
 		{
@@ -316,7 +316,7 @@ mapPerks( var )
 			self maps\mp\zombies\_zm_score::minus_to_player_score( var, 1 );
 			self thread free_perk_powerup_override();
 			
-		gpb("[" + self.clantag + "^7] " + self.clantag_color + getPlayerName( self ) + " ^7has purchased a " + colors + "random perk^7! (^2$25,000^7)");
+		gpb("[" + self.clantag + "^7] " + self.clantag_color + player_name( self ) + " ^7has purchased a " + colors + "random perk^7! (^2$25,000^7)");
 		} else if( self.score < self.mapscore )
 
 		{
@@ -334,7 +334,7 @@ mapPerks( var )
 			self maps\mp\zombies\_zm_score::minus_to_player_score( var, 1 );
 			self thread free_perk_powerup_override();
 			
-		gpb("[" + self.clantag + "^7] " + self.clantag_color + getPlayerName( self ) + " ^7has purchased a " + colors + "random perk^7! (^2$10,000^7)");
+		gpb("[" + self.clantag + "^7] " + self.clantag_color + player_name( self ) + " ^7has purchased a " + colors + "random perk^7! (^2$10,000^7)");
 		} else if( self.score < self.mapscore )
 
 		{

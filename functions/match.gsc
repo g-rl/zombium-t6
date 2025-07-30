@@ -256,10 +256,10 @@ init_dvars()
 
 	if (level.script == "zm_transit")
     {
-		setdvar("scr_screecher_ignore_player", 1); // Denizens do not spawn
+		setdvar("scr_screecher_ignore_player", 1); // denizens do not spawn
     }
 
-	setdvar( "player_lastStandBleedoutTime", 170 );
+	setdvar("player_lastStandBleedoutTime", 170);
     setdvar("bg_prone_yawcap", "360" );
     setdvar("bg_ladder_yawcap", "360");
     setdvar("friendlyfire_enabled", 1);
@@ -273,18 +273,22 @@ init_dvars()
     setdvar("bg_gravity", 785);   
 	setdvar("g_useholdtime", 0);
 	setdvar("g_useholdspawndelay", 0);
-	setdvar( "player_backSpeedScale", 1.3 );
-	setdvar("night_mode", 1);
-    // d( "sv_enablebounces", 1 );
-    setdvar( "player_useRadius", 600 );
-	setdvar( "dtp_exhaustion_window", 0 );
-	setdvar( "player_meleeRange", 64 );
-	setdvar( "player_breath_gasp_lerp", 0 );
-	setdvar( "perk_weapRateEnhanced", 1 );
-	setdvar( "sv_patch_zm_weapons", 0 );
-	setdvar( "sv_fix_zm_weapons", 1 );
-	setdvar( "sv_voice", 2 );
-	setdvar( "sv_voiceQuality", 9 );   
+	setdvar("player_backSpeedScale", 1.3);
+    setdvar("player_useRadius", 600);
+	setdvar("dtp_exhaustion_window", 0);
+	setdvar("player_meleeRange", 64);
+	setdvar("player_breath_gasp_lerp", 0);
+	setdvar("perk_weapRateEnhanced", 1);
+	setdvar("sv_patch_zm_weapons", 0);
+	setdvar("sv_fix_zm_weapons", 1);
+	setdvar("sv_voice", 2);
+	setdvar("sv_voiceQuality", 9);   
+
+	// buried is way too dark so lets not do it there
+	if (getdvar("mapname") != "zm_buried")
+		setdvar("night_mode", 1);
+	else
+		setdvar("night_mode", 0);
 }
 
 init_precache()
@@ -294,41 +298,22 @@ init_precache()
 
 init_client_dvars()
 {
-    self setClientDvar( "dtp_post_move_pause", 0 );
-	self setClientDvar( "dtp_exhaustion_window", 0 );
-	self setClientDvar( "dtp_startup_delay", 0 );
-
-    self setClientDvar("cg_chatHeight", 0);
-    self setClientDvar( "com_maxfps", 144 );
-    //self setClientDvar("cg_fov", 95);
-   // self setClientDvar("cg_fov_default", 95);
-	//self SetClientDvar( "ai_disableSpawn", "0");
+    self setClientDvar("dtp_post_move_pause", 0);
+	self setClientDvar("dtp_exhaustion_window", 0);
+	self setClientDvar("dtp_startup_delay", 0);
     self setclientdvar("player_strafeSpeedScale", 1);
     self setclientdvar("player_sprintStrafeSpeedScale", 1);
-
-	self setClientDvar( "aim_automelee_enabled", 0 );
-
-	self setClientDvar( "cg_drawBreathHint", 0 );
-
-	//self setClientDvar( "cg_friendlyNameFadeIn", 0 );
-	//self setClientDvar( "cg_friendlyNameFadeOut", 250 );
-	//self setClientDvar( "cg_enemyNameFadeIn", 0 );
-	//self setClientDvar( "cg_enemyNameFadeOut", 250 );
-    self setClientDvar( "safeArea_horizontal", 0.85);
-    self setClientDvar( "safeArea_vertical", 0.85);
-
-	self setClientDvar( "waypointOffscreenPointerDistance", 30);
-	self setClientDvar( "waypointOffscreenPadTop", 32);
-	self setClientDvar( "waypointOffscreenPadBottom", 32);
-	self setClientDvar( "waypointPlayerOffsetStand", 30);
-	self setClientDvar( "waypointPlayerOffsetCrouch", 30);
-
-	self setClientDvar( "r_fog", 0 );
-
-	self setClientDvar( "r_lodBiasRigid", -1000 );
-	self setClientDvar( "r_lodBiasSkinned", -1000 );
-
-	self setClientDvar( "cg_ufo_scaler", 1 );
+	self setclientdvar("aim_automelee_enabled", 0);
+	self setclientdvar("cg_drawBreathHint", 0);
+	self setclientdvar("waypointOffscreenPointerDistance", 30);
+	self setclientdvar("waypointOffscreenPadTop", 32);
+	self setclientdvar("waypointOffscreenPadBottom", 32);
+	self setclientdvar("waypointPlayerOffsetStand", 30);
+	self setclientdvar("waypointPlayerOffsetCrouch", 30);
+	self setclientdvar("r_fog", 0 );
+	self setClientDvar("r_lodBiasRigid", -1000);
+	self setClientDvar("r_lodBiasSkinned", -1000);
+	self setClientDvar("cg_ufo_scaler", 1);
 }
 
 setting_perks()
@@ -337,8 +322,8 @@ setting_perks()
     self setperk("specialty_movefaster");
     self setperk("specialty_sprintrecovery");    
     self setperk("specialty_earnmoremomentum");
-	self setperk( "specialty_fastmantle" );
-	self setperk( "specialty_fastladderclimb" );
+	self setperk("specialty_fastmantle");
+	self setperk("specialty_fastladderclimb");
     self setperk("specialty_extraammo");
     self setperk("specialty_bulletpenetration");
     self setperk("specialty_bulletaccuracy");
@@ -365,12 +350,10 @@ zombie_total()
 perk_points()
 {
 	self endon( "disconnect" );
-
-	for ( ;; )
+	for(;;)
 	{
 		self waittill_any("perk_acquired");
 		self thread give_perk_points();
-
 	}
 }
 
@@ -415,89 +398,64 @@ boxPrice()
     }
 }
 
-papPrice()
-{
-    precachestring(&"ZOMBIE_PERK_PACKAPUNCH");
-    precachestring(&"ZOMBIE_PERK_PACKAPUNCH_ATT");
-
-
-    level waittill( "Pack_A_Punch_on" );
-
-	first_roll = strTok("3500 3750 4000 4250 4500 4750 5000 5500 6000", " "); // May adjust later..
-	fr = RandomInt(first_roll.size);
-	r1 = first_roll[fr];
-
-	attatchment_roll = strTok("1000 1250 1500 1750 2000 2250 2350 2500", " ");
-	ar = RandomInt(attatchment_roll.size);
-	r2 = attatchment_roll[ar];
-
-
-    pap_triggers = getentarray( "specialty_weapupgrade", "script_noteworthy" );
-    pap_trigger = pap_triggers[0];
-    pap_trigger.cost = r1;
-    pap_trigger sethintstring( &"ZOMBIE_PERK_PACKAPUNCH", pap_trigger.cost ); 
-    pap_trigger.attachment_cost = r2;
-    pap_trigger sethintstring( &"ZOMBIE_PERK_PACKAPUNCH", pap_trigger.attatchment_cost ); 
-}
-
 init_wallbuy_changes()
 {
 	flag_wait( "initial_blackscreen_passed" );
 
-	low = strTok("500,550,650,850,1150", ","); // May adjust later..
+	low = strTok("250,350,500,550", ","); // May adjust later..
 	l = RandomInt(low.size);
 	r1 = low[l];
 
-	high = strTok("850,1150,1250,1350,1500,1750,1800,1950,2250", ",");
+	high = strTok("850,1150,1250,1350,1500", ",");
 	h = RandomInt(high.size);
 	r2 = high[h];
 
     
-	if (isDefined(level.zombie_weapons["beretta93r_zm"]))
+	if (isdefined(level.zombie_weapons["beretta93r_zm"]))
 	{
 		cost = r1;
 		level.zombie_weapons["beretta93r_zm"].cost = cost;
 		level.zombie_weapons["beretta93r_zm"].ammo_cost = int(cost / 2);
 	}
 
-	if (isDefined(level.zombie_weapons["870mcs_zm"]))
+	if (isdefined(level.zombie_weapons["870mcs_zm"]))
 	{
 		cost = r1;
 		level.zombie_weapons["870mcs_zm"].cost = cost;
 		level.zombie_weapons["870mcs_zm"].ammo_cost = int(cost / 2);
 	}
 
-	if (isDefined(level.zombie_weapons["an94_zm"]))
+	if (isdefined(level.zombie_weapons["an94_zm"]))
 	{
 		cost = r2;
 		level.zombie_weapons["an94_zm"].cost = cost;
 		level.zombie_weapons["an94_zm"].ammo_cost = int(cost / 2);
 	}
-	if (isDefined(level.zombie_weapons["pdw57_zm"]))
+	if (isdefined(level.zombie_weapons["pdw57_zm"]))
 	{
 		cost = r1;
 		level.zombie_weapons["pdw57_zm"].cost = cost;
 		level.zombie_weapons["pdw57_zm"].ammo_cost = int(cost / 2);
 	}
-	if (isDefined(level.zombie_weapons["m14_zm"]))
+	if (isdefined(level.zombie_weapons["m14_zm"]))
 	{
 		cost = r1;
 		level.zombie_weapons["m14_zm"].cost = cost;
 		level.zombie_weapons["m14_zm"].ammo_cost = int(cost / 2);
 	}
-	if (isDefined(level.zombie_weapons["lsat_zm"]))
+	if (isdefined(level.zombie_weapons["lsat_zm"]))
 	{
 		cost = r2;
 		level.zombie_weapons["lsat_zm"].cost = cost;
 		level.zombie_weapons["lsat_zm"].ammo_cost = int(cost / 2);
 	}
-	if (isDefined(level.zombie_weapons["rottweil72_zm"]))
+	if (isdefined(level.zombie_weapons["rottweil72_zm"]))
 	{
 		cost = r1;
 		level.zombie_weapons["rottweil72_zm"].cost = cost;
 		level.zombie_weapons["rottweil72_zm"].ammo_cost = int(cost / 2);
 	}
-	if (isDefined(level.zombie_weapons["thompson_zm"]))
+	if (isdefined(level.zombie_weapons["thompson_zm"]))
 	{
 		cost = r2;
 		level.zombie_weapons["thompson_zm"].cost = cost;
@@ -509,6 +467,10 @@ init_wallbuy_changes()
 treasure_chest_canplayerreceiveweapon_override( player, weapon, pap_triggers ) //checked matches cerberus output
 {
 	if ( !get_is_in_box( weapon ) )
+	{
+		return 0;
+	}
+	if (player hasperk(weapon)) // perk glitch fix?
 	{
 		return 0;
 	}

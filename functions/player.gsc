@@ -1907,7 +1907,7 @@ grenade_explode_on_impact()
 	self resetmissiledetonationtime(0);
 }
 
-g_impact()
+faster_grenades()
 {
 	self endon("disconnect");
 
