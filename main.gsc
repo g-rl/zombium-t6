@@ -60,11 +60,15 @@ init()
 	level.zombie_include_weapons["usrpg_zm"] = 0; // remove rpg completely
 	level.zombie_include_weapons["emp_grenade_zm"] = 0; // remove rpg completely
 
+	// add these weapons to box
 	level.zombie_weapons["slipgun_zm"].is_in_box = 1;
 	level.zombie_weapons["staff_air_zm"].is_in_box = 1;
 	level.zombie_weapons["staff_fire_zm"].is_in_box = 1;
 	level.zombie_weapons["staff_lightning_zm"].is_in_box = 1;
 	level.zombie_weapons["staff_water_zm"].is_in_box = 1;
+	level.zombie_weapons["sticky_grenade_zm"].is_in_box = 1;
+	level.zombie_weapons["bowie_knife_zm"].is_in_box = 1;
+	level.zombie_weapons["knife_ballistic_bowie_zm"].is_in_box = 1;
 
 	// remove shitty weapons from box
 	level.zombie_weapons["saritch_zm"].is_in_box = 0; // remove smr from box
