@@ -10,12 +10,13 @@
 #include scripts\zm\functions\player;
 #include scripts\zm\functions\powerups;
 #include scripts\zm\functions\hud;
+#include scripts\zm\functions\girly;
+#include scripts\zm\functions\commands;
 
 m(lol)
 {  
     if(lol == "buried")
     {
-
         return "zm_buried";
 
     } else if (lol == "motd" || lol == "mob") {

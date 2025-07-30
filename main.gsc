@@ -26,7 +26,7 @@
 
 main()
 {	
-	if(getdvar("mapname") != "zm_prison") // [ hotfix ] disabled in motd because afterlife doesnt work with it 
+	if(getdvar("mapname") != "zm_prison") // disabled in motd because afterlife doesnt work with it 
 		maps\mp\zombies\_zm::register_player_damage_callback(::player_aat_damage_respond); // moved to main from init because of it not loading in origins
 
 	maps\mp\zombies\_zm_spawner::register_zombie_damage_callback(::aat_zombie_damage_response);
@@ -90,7 +90,6 @@ init()
 
     level thread fake_hitmarkers();
 	level thread cycle_box_price(); // cycle random box price
-	// level thread change_pap_price(); // change pap price (dont use for now because of aat)
 	level thread setup_commands(); // command system (prefix is .)
 	level thread night_mode(); // init night mode on all maps
 	level thread overflow_fix(); // hud updates a lot
@@ -100,10 +99,9 @@ init()
 	level thread perk_machine_quarter_change(); // prone for perk points
 	level thread turn_on_powerr(); // always turn on power
 	level thread powerup_drop_override(); // higher chance to drop powerups
-	// level thread coop_pause(); // allows pausing game with multiple people (doesnt work rn)
 	level thread fake_reset(); // reset game after 12h
 	level thread transit_power(); // remove lava pools & turn on power
-	// level thread tomb_upgrades();
+	// level thread coop_pause(); // allows pausing game with multiple people (doesnt work rn)
 
     init_dvars(); // dvar settings
     init_wallbuy_changes(); // edit wallbuys
@@ -169,23 +167,17 @@ setup_player()
 	self thread map_colors(); // colors for hud
 	self thread counter(); // zombie counter
 	self thread name_status(); // check status
-	// self thread bind_monitor(); // for location pinging / dropping weapons
 	self thread perk_points(); // give points when drinking perks
 	self thread rapid_fire(); // allow pistol rapid firing
 	self thread war_machine_explode_on_impact(); // better war machine
 	self thread g_impact(); // faster grenade explosions
 	self thread give_starting_points(); // random starting points
 	self thread set_persistent_stats(); // give all perma perks
+	// self thread bind_monitor(); // for location pinging / dropping weapons
 
 	// origins settings
-	// self.b_punch_upgraded = 1;
-	// self.str_punch_element = "fire";
-	// self.one_inch_punch_flag_has_been_init = 1;
-	
-	// i = randomize("one_inch_punch_zm one_inch_punch_air_zm one_inch_punch_fire_zm one_inch_punch_ice_zm one_inch_punch_lightning_zm");
 	self thread carpenter_repair_shield();
-	self thread tomb_give_shovel();
-	// self thread tomb_give_one_punch("one_inch_punch_zm");
+	self thread tomb_give_shovel(); // golden shovel and helmet
 
 	// motd settings
 	self thread give_tomahwak();
@@ -204,8 +196,6 @@ setup_player()
 	self thread additionalprimaryweapon_indicator();
 	self thread additionalprimaryweapon_stowed_weapon_refill();
 	self thread disable_player_quotes(); // disable voice lines
-
-	//self thread all_hud_watcher();
 
 	if (isdefined(self.first) && self.first)
 	{
@@ -228,11 +218,11 @@ setup_player()
 		self.health = health;
 
 		self thread timer_hud();
-		// self thread trap_timer_hud();
 		self thread graphic_tweaks();
 		self thread night_mode();
 		self thread rotate_skydome();
 		// self thread health_bar_hud();
+		// self thread trap_timer_hud();
 		self thread welcome_message();
 		self iprintln("last update: ^3july 28th 2025");
 	}

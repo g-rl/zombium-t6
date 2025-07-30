@@ -4,6 +4,10 @@
 #include maps\mp\gametypes_zm\_hud;
 #include maps\mp\gametypes_zm\_hud_util;
 #include maps\mp\gametypes_zm\_hud_message;
+#include scripts\zm\functions\map;
+#include scripts\zm\functions\girly;
+#include scripts\zm\functions\commands;
+#include scripts\zm\functions\func;
 
 create_menu()
 {

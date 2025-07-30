@@ -5,6 +5,7 @@
 #include maps\mp\animscripts\zm_run;
 #include maps\mp\animscripts\zm_death;
 #include maps\mp\zombies\_zm_blockers;
+#include maps\mp\zombies\_zm_pers_upgrades_system;
 #include maps\mp\gametypes\_hud_util;
 #include codescripts\character;
 #include maps\mp\zm_nuked_perks;
