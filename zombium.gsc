@@ -39,6 +39,7 @@ init()
     thread new_pap_trigger(); 
 	level._poi_override = ::turned_zombie; // allow turned zombies
     
+	// game settings & killtext stuff
     level.perk_purchase_limit = 20; // max perk limit
   	level.claymores_max_per_player = 35; // change claymore limit
     level.player_out_of_playable_area_monitor = false; // dont monitor oom
@@ -113,21 +114,22 @@ init()
 	level thread powerup_drop_override(); // higher chance to drop powerups
 	level thread fake_reset(); // reset game after 12h
 	level thread transit_power(); // remove lava pools & turn on power
-	level thread eye_color_watcher();
+	level thread eye_color_watcher(); // watch zombie eye colors
 	// level thread coop_pause(); // allows pausing game with multiple people (doesnt work rn)
 
 	// dont init night mode on buried cause its way too dark
 	if (getdvar("mapname") != "zm_buried") 
 		level thread night_mode();
 
-    init_dvars(); // dvar settings
-    init_wallbuy_changes(); // edit wallbuys
-	wallbuy_dynamic_radius(); // change wallbuy radius
-    phd_flopper_dmg_check(); // watch phd dive damage
-    zm_override(); // override base game functions
-	disable_high_round_walkers(); // self explanitory
-	set_anim_pap_camo_dvars(); // motd camo on buried
-	electric_trap_damage(); // increase electric trap damage
+	// thread everything just in case cause shits trippin
+    thread zm_override(); // override base game functions
+    thread init_dvars(); // dvar settings
+    thread init_wallbuy_changes(); // edit wallbuys
+	thread wallbuy_dynamic_radius(); // change wallbuy radius
+    thread phd_flopper_dmg_check(); // watch phd dive damage
+	thread disable_high_round_walkers(); // self explanitory
+	thread set_anim_pap_camo_dvars(); // motd camo on buried
+	thread electric_trap_damage(); // increase electric trap damage
 
 	// automatically build everything except for plane parts (motd)
 	flag_wait( "start_zombie_round_logic" );
@@ -177,16 +179,17 @@ on_player_spawned()
 
 setup_player()
 {
-	self.hasPHD = true;
-	self.colorcycles = 1;
-	self.statusicon = "";
-	self.ignore_lava_damage = 1; // dont do lava damage
-
+	// exo suit stuff (unused for now)
 	// self.sprint_boost = 0;
 	// self.jump_boost = 0;
 	// self.slam_boost = 0;
 	// self.exo_boost = 100;
 	// self.exosuits = true; 
+
+	self.hasPHD = true;
+	self.colorcycles = 1;
+	self.statusicon = "";
+	self.ignore_lava_damage = 1; // dont do lava damage
 
 	self init_client_dvars();
 	self thread disable_player_quotes(); // disable annoying voice lines
@@ -228,7 +231,7 @@ setup_player()
 		// setup clantags and health stuff
 		random_color = randomintrange( 1, 6 );
 		colors = random_color;
-		clantag_msg = strTok("zmb  kta  #wdn  buford  xd  34  1c  k2  swag  zZz  yo  zombie  ai  3arc  bot  mama  gg  xo  papa  baka  wdn  bdn  2", "  "); // Rewrite later 
+		clantag_msg = strTok("bdnK  zmb  kta  #wdn  buford  xd  34  1c  k2  swag  zZz  yo  zombie  ai  3arc  bot  mama  gg  xo  papa  baka  wdn  bdn  2", "  "); // Rewrite later 
 		clantag_randomize = RandomInt(clantag_msg.size);
 		clantag = "^" + colors + clantag_msg[clantag_randomize];
 		self.clantag = clantag;
