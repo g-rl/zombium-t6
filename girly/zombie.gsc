@@ -23,8 +23,8 @@
 #include maps\mp\zombies\_zm_spawner;
 #include maps\mp\zombies\_zm;
 #include maps\mp\animscripts\zm_utility;
-#include scripts\zm\functions\girly;
-#include scripts\zm\functions\func;
+#include scripts\zm\girly\girly;
+#include scripts\zm\girly\func;
 
 
 /*

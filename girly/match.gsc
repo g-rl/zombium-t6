@@ -93,18 +93,87 @@
 #include maps\mp\zombies\_zm_power;
 #include maps\mp\zombies\_zm_powerups;
 #include maps\mp\animscripts\zm_utility;
-#include scripts\zm\functions\girly;
-#include scripts\zm\functions\commands;
-#include scripts\zm\functions\func;
-#include scripts\zm\functions\exo_suit;
-#include scripts\zm\functions\player;
-#include scripts\zm\functions\zombie;
-#include scripts\zm\functions\powerups;
-#include scripts\zm\functions\overflow_fix;
-#include scripts\zm\functions\hud;
-#include scripts\zm\functions\map;
-#include scripts\zm\functions\menu;
-#include scripts\zm\functions\weapons;
+#include scripts\zm\girly\girly;
+#include scripts\zm\girly\commands;
+#include scripts\zm\girly\func;
+#include scripts\zm\girly\exo_suit;
+#include scripts\zm\girly\player;
+#include scripts\zm\girly\zombie;
+#include scripts\zm\girly\powerups;
+#include scripts\zm\girly\overflow_fix;
+#include scripts\zm\girly\hud;
+#include scripts\zm\girly\map;
+#include scripts\zm\girly\menu;
+#include scripts\zm\girly\weapons;
+
+increase_trigger_radius()
+{
+	for(i = 0; i < level._unitriggers.trigger_stubs.size; i++)
+	{
+		if(isdefined(level._unitriggers.trigger_stubs[i].zombie_weapon_upgrade))
+		{
+			level._unitriggers.trigger_stubs[i].script_length = 96;
+		}
+	}
+}
+
+wallbuy_dynamic_radius()
+{
+	if(!(is_classic() && level.scr_zm_map_start_location == "processing"))
+	{
+		return;
+	}
+
+	while (!isdefined(level.built_wallbuys))
+	{
+		wait 0.5;
+	}
+
+	prev_built_wallbuys = 0;
+
+	while (1)
+	{
+		if (level.built_wallbuys > prev_built_wallbuys)
+		{
+			prev_built_wallbuys = level.built_wallbuys;
+			increase_trigger_radius();
+		}
+
+		if (level.built_wallbuys == -100)
+		{
+			increase_trigger_radius();
+			return;
+		}
+
+		wait 0.5;
+	}
+}
+
+electric_trap_damage()
+{
+	level.etrap_damage = maps\mp\zombies\_zm::ai_zombie_health( 255 );
+}
+
+better_nukes(points)
+{
+    self endon("disconnect");
+    level endon("game_end");
+    for(;;) {
+        self waittill("nuke_triggered");
+        points = ((get_round_enemy_array().size + level.zombie_total) * points);
+        
+        if (level.zombie_vars[self.team]["zombie_point_scalar"] != 1)
+        {
+        	points = points * 2;
+        }
+        
+        for( i = 0; i < level.players.size; i++ )
+        {
+        	level.players[i].score += points;
+        }
+        wait 0.02;
+    }
+}
 
 new_round_hud()
 {

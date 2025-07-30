@@ -5,13 +5,13 @@
 #include maps\mp\gametypes_zm\_hud_util;
 #include maps\mp\gametypes_zm\_hud_message;
 #include maps\mp\zombies\_zm_utility;
-#include scripts\zm\functions\func;
-#include scripts\zm\functions\match;
-#include scripts\zm\functions\player;
-#include scripts\zm\functions\powerups;
-#include scripts\zm\functions\hud;
-#include scripts\zm\functions\girly;
-#include scripts\zm\functions\commands;
+#include scripts\zm\girly\func;
+#include scripts\zm\girly\match;
+#include scripts\zm\girly\player;
+#include scripts\zm\girly\powerups;
+#include scripts\zm\girly\hud;
+#include scripts\zm\girly\girly;
+#include scripts\zm\girly\commands;
 
 m(lol)
 {  

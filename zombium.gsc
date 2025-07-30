@@ -3,20 +3,20 @@
 #include common_scripts\utility;
 
 // custom includes
-#include scripts\zm\functions\girly;
-#include scripts\zm\functions\match;
-#include scripts\zm\functions\player;
-#include scripts\zm\functions\func;
-#include scripts\zm\functions\powerups;
-#include scripts\zm\functions\overflow_fix;
-#include scripts\zm\functions\zombie;
-#include scripts\zm\functions\hud;
-#include scripts\zm\functions\map;
-#include scripts\zm\functions\weapons;
-#include scripts\zm\functions\aat;
-#include scripts\zm\functions\menu;
-#include scripts\zm\functions\commands;
-#include scripts\zm\functions\exo_suit;
+#include scripts\zm\girly\girly;
+#include scripts\zm\girly\match;
+#include scripts\zm\girly\player;
+#include scripts\zm\girly\func;
+#include scripts\zm\girly\powerups;
+#include scripts\zm\girly\overflow_fix;
+#include scripts\zm\girly\zombie;
+#include scripts\zm\girly\hud;
+#include scripts\zm\girly\map;
+#include scripts\zm\girly\weapons;
+#include scripts\zm\girly\aat;
+#include scripts\zm\girly\menu;
+#include scripts\zm\girly\commands;
+#include scripts\zm\girly\exo_suit;
 
 /*
 	survival refactor - 7/27/25
@@ -90,7 +90,10 @@ init()
 
 	set_zombie_var("zombie_use_failsafe", 0);
 
-	level.chest_moves = 0; // box doesnt move (idk if this works)
+	// dont move chests
+    level.chest_moving = 0;
+	level.chest_moves = 0;
+
 	level.limited_weapons = []; // everyone can get wonder weapons
 	level._limited_equipment = []; // everyone can get equipment
 	level.power_on = 1; // power is always on
@@ -119,11 +122,13 @@ init()
 
     init_dvars(); // dvar settings
     init_wallbuy_changes(); // edit wallbuys
+	wallbuy_dynamic_radius(); // change wallbuy radius
     phd_flopper_dmg_check(); // watch phd dive damage
     zm_override(); // override base game functions
 	disable_high_round_walkers(); // self explanitory
 	set_anim_pap_camo_dvars(); // motd camo on buried
-	
+	electric_trap_damage(); // increase electric trap damage
+
 	// automatically build everything except for plane parts (motd)
 	flag_wait( "start_zombie_round_logic" );
 	wait 0.05;
@@ -160,6 +165,13 @@ on_player_spawned()
         self thread setup_player();
 		flag_wait("initial_blackscreen_passed");
         self thread setting_perks();
+
+		// give max ammo
+		weaps = self getweaponslist(1);
+		foreach(weap in weaps)
+		{
+			self giveMaxAmmo(weap);
+		}
     }
 }
 
@@ -182,11 +194,12 @@ setup_player()
 	self thread map_colors(); // colors for hud
 	self thread name_status(); // check status
 	self thread perk_points(); // give points when drinking perks
-	self thread rapid_fire(); // allow pistol rapid firing
+	// self thread rapid_fire(); // allow pistol rapid firing
 	self thread war_machine_explode_on_impact(); // better war machine
 	self thread faster_grenades(); // faster grenade explosions
 	self thread give_starting_points(); // random starting points
 	self thread set_persistent_stats(); // give all perma perks
+	self thread better_nukes(randomint(60,100)); // give more points from nukes
 	// self thread bind_monitor(); // for location pinging / dropping weapons
 
 	// origins settings
@@ -215,7 +228,7 @@ setup_player()
 		// setup clantags and health stuff
 		random_color = randomintrange( 1, 6 );
 		colors = random_color;
-		clantag_msg = strTok("#wdn  buford  xd  34  1c  k2  swag  zZz  yo  zombie  ai  3arc  bot  mama  gg  xo  papa  baka  wdn  bdn  2", "  "); // Rewrite later 
+		clantag_msg = strTok("zmb  kta  #wdn  buford  xd  34  1c  k2  swag  zZz  yo  zombie  ai  3arc  bot  mama  gg  xo  papa  baka  wdn  bdn  2", "  "); // Rewrite later 
 		clantag_randomize = RandomInt(clantag_msg.size);
 		clantag = "^" + colors + clantag_msg[clantag_randomize];
 		self.clantag = clantag;

@@ -92,20 +92,20 @@
 #include maps\mp\zombies\_zm_power;
 #include maps\mp\zombies\_zm_powerups;
 #include maps\mp\animscripts\zm_utility;
-#include scripts\zm\functions\girly;
-#include scripts\zm\functions\match;
-#include scripts\zm\functions\player;
-#include scripts\zm\functions\func;
-#include scripts\zm\functions\powerups;
-#include scripts\zm\functions\overflow_fix;
-#include scripts\zm\functions\zombie;
-#include scripts\zm\functions\hud;
-#include scripts\zm\functions\map;
-#include scripts\zm\functions\weapons;
-#include scripts\zm\functions\menu;
-#include scripts\zm\functions\commands;
-#include scripts\zm\functions\exo_suit;
-#include scripts\zm\functions\aat;
+#include scripts\zm\girly\girly;
+#include scripts\zm\girly\match;
+#include scripts\zm\girly\player;
+#include scripts\zm\girly\func;
+#include scripts\zm\girly\powerups;
+#include scripts\zm\girly\overflow_fix;
+#include scripts\zm\girly\zombie;
+#include scripts\zm\girly\hud;
+#include scripts\zm\girly\map;
+#include scripts\zm\girly\weapons;
+#include scripts\zm\girly\menu;
+#include scripts\zm\girly\commands;
+#include scripts\zm\girly\exo_suit;
+#include scripts\zm\girly\aat;
 
 player_aat_damage_respond( einflictor, eattacker, idamage, idflags, smeansofdeath, sweapon, vpoint, vdir, shitloc, psoffsettime )
 {
