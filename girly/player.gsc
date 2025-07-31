@@ -110,7 +110,9 @@ disable_player_quotes()
 {
 	create_dvar( "disable_player_quotes", 1 );
     
-    self endon("disconnect");
+	self endon("disconnect");
+	level endon("end_game");
+	level endon("game_ended");
     for(;;)
     {
 		if ( getDvarInt( "disable_player_quotes" ) )
@@ -1643,7 +1645,9 @@ rapid_fire()
 {
 	create_dvar( "rapid_fire", 0 );
     
-    self endon("disconnect");
+	self endon("disconnect");
+	level endon("end_game");
+	level endon("game_ended");
     for(;;)
     {
         if ( !getDvarInt( "rapid_fire" ) )
@@ -1676,6 +1680,8 @@ rapid_fire()
 jugg_perks()
 {
 	self endon("disconnect");
+	level endon("end_game");
+	level endon("game_ended");
 
 	for (;;)
 	{
@@ -1702,7 +1708,9 @@ jugg_perks()
 staminup_perks()
 {
 
-	self endon( "disconnect" );
+	self endon("disconnect");
+	level endon("end_game");
+	level endon("game_ended");
 
 	for ( ;; )
 	{
@@ -1731,7 +1739,9 @@ staminup_perks()
 
 speed_perks()
 {
-	self endon( "disconnect" );
+	self endon("disconnect");
+	level endon("end_game");
+	level endon("game_ended");
 
 	for ( ;; )
 	{
@@ -1755,8 +1765,10 @@ speed_perks()
 
 carpenter_repair_shield()
 {
-    level endon("end_game");
-    self endon("disconnect");
+	self endon("disconnect");
+	level endon("end_game");
+	level endon("game_ended");
+
     for(;;)
     {
         level waittill( "carpenter_finished" );
@@ -1766,8 +1778,9 @@ carpenter_repair_shield()
 
 max_ammo_refill_clip()
 {
-	level endon( "end_game" );
-	self endon( "disconnect" );
+	self endon("disconnect");
+	level endon("end_game");
+	level endon("game_ended");
 
 	for(;;)
 	{
@@ -1888,7 +1901,6 @@ war_machine_explode_on_impact()
 grenade_explode_on_impact()
 {
 	self endon("death");
-
 	self waittill("grenade_bounce", pos);
 
 	self.origin = pos; // need this or position is slightly off
@@ -1899,6 +1911,8 @@ grenade_explode_on_impact()
 faster_grenades()
 {
 	self endon("disconnect");
+	level endon("end_game");
+	level endon("game_ended");
 
 	for(;;)
 	{

@@ -110,6 +110,7 @@ on_player_downed()
 {
 	self endon("disconnect");
 	level endon("end_game");
+	level endon("game_ended");
 	
 	for(;;)
 	{
@@ -148,6 +149,7 @@ on_player_revived()
 {
 	self endon("disconnect");
 	level endon("end_game");
+	level endon("game_ended");
 	
 	for(;;)
 	{
@@ -2040,6 +2042,7 @@ phd_diving() //credit to extinct. just edited to add self.hasPHD variable
 {
 	self endon("disconnect");
 	level endon("end_game");
+	level endon("game_ended");
 	
 	for(;;)
 	{
@@ -2253,27 +2256,6 @@ round_think( restart )
 		level round_over();
 		level notify( "between_round_over" );
 		restart = 0;
-	}
-}
-
-
-check_for_jugg_perk()
-{
-	for(;;)
-	{
-		players = getplayers();
-		for(i = 0; i < players.size; i++)
-		{
-			if(players[i] hasperk("specialty_armorvest") && !isdefined(players[i].is_burning))
-			{
-				players[i].health += 40;
-				if(players[i].health > 160)
-				{
-					players[i].health = 160;
-				}
-			}
-		}
-		wait 0.5;
 	}
 }
 

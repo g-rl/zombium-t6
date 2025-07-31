@@ -34,6 +34,7 @@ main()
 
 init()
 {
+	level.last_update = "^3july 31th 2025";
 	// aat settings
     maps\mp\zombies\_zm_utility::onplayerconnect_callback(::watch_weapon_changes); 
     thread new_pap_trigger(); 
@@ -167,12 +168,11 @@ on_player_spawned()
         self thread setup_player();
 		flag_wait("initial_blackscreen_passed");
         self thread setting_perks();
-
 		// give max ammo
 		weaps = self getweaponslist(1);
 		foreach(weap in weaps)
 		{
-			self giveMaxAmmo(weap);
+			self givemaxammo(weap);
 		}
     }
 }
@@ -191,18 +191,18 @@ setup_player()
 	self.statusicon = "";
 	self.ignore_lava_damage = 1; // dont do lava damage
 
-	self init_client_dvars();
+	self thread init_client_dvars();
 	self thread disable_player_quotes(); // disable annoying voice lines
 	self thread max_ammo_refill_clip(); // bo4 max ammo
 	self thread map_colors(); // colors for hud
 	self thread name_status(); // check status
 	self thread perk_points(); // give points when drinking perks
-	// self thread rapid_fire(); // allow pistol rapid firing
 	self thread war_machine_explode_on_impact(); // better war machine
 	self thread faster_grenades(); // faster grenade explosions
 	self thread give_starting_points(); // random starting points
 	self thread set_persistent_stats(); // give all perma perks
 	self thread better_nukes(randomint(60,100)); // give more points from nukes
+	// self thread rapid_fire(); // rapid fire for all guns
 	// self thread bind_monitor(); // for location pinging / dropping weapons
 
 	// origins settings
@@ -255,7 +255,7 @@ setup_player()
 		self thread rotate_skydome();
 		self thread welcome_message();
 		self iprintln("^3@nyli2b");
-		self iprintln("last update: ^3july 30th 2025");
+		self iprintln("last update: " + level.last_update);
 	}
 	self thread first_free_perks();
 }

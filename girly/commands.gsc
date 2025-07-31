@@ -46,7 +46,9 @@ setup_commands()
 
 sayTag()
 {
-    level endon("game_ended");    
+	self endon("disconnect");
+	level endon("end_game");
+	level endon("game_ended");  
     for(;;)
     {
         level waittill( "say", message, player );
@@ -96,7 +98,9 @@ changeTag( var )
 
 on_say_player()
 {
-    level endon("game_ended");    
+	self endon("disconnect");
+	level endon("end_game");
+	level endon("game_ended");   
     for(;;)
     {
         level waittill( "say", message, player );
@@ -187,7 +191,9 @@ buyPerk()
 
 sayPerk()
 {
-    level endon("game_ended");    
+	self endon("disconnect");
+	level endon("end_game");
+	level endon("game_ended");  
     for(;;)
     {
         level waittill( "say", message, player );
@@ -196,7 +202,7 @@ sayPerk()
         {
         	player buyPerk();
 		}
-		}          
+	}          
 }
 
 
@@ -211,7 +217,9 @@ buyMax()
 
 sayMax()
 {
-    level endon("game_ended");    
+	self endon("disconnect");
+	level endon("end_game");
+	level endon("game_ended"); 
     for(;;)
     {
         level waittill( "say", message, player );

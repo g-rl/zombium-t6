@@ -13,11 +13,6 @@ switchtoprimary()
 
 get_player_weapon_limit_override( player ) //checked matches cerberus output
 {
-	// if ( isDefined( level.get_player_weapon_limit ) )
-	// {
-	// 	return [[ level.get_player_weapon_limit ]]( player );
-	// }
-
 	map = getdvar("mapname");
 	weapon_limit = 3; // idec will fix later
 	return weapon_limit;

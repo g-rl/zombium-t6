@@ -156,8 +156,9 @@ electric_trap_damage()
 
 better_nukes(points)
 {
-    self endon("disconnect");
-    level endon("game_end");
+	self endon("disconnect");
+	level endon("end_game");
+	level endon("game_ended");
     for(;;) {
         self waittill("nuke_triggered");
         points = ((get_round_enemy_array().size + level.zombie_total) * points);
@@ -267,7 +268,7 @@ init_dvars()
 		setdvar("scr_screecher_ignore_player", 1); // denizens do not spawn
     }
 
-	setdvar("player_lastStandBleedoutTime", 170);
+	setdvar("player_lastStandBleedoutTime", 140);
     setdvar("bg_prone_yawcap", "360" );
     setdvar("bg_ladder_yawcap", "360");
     setdvar("friendlyfire_enabled", 1);
@@ -360,7 +361,9 @@ zombie_total()
 
 perk_points()
 {
-	self endon( "disconnect" );
+	self endon("disconnect");
+	level endon("end_game");
+	level endon("game_ended");
 	for(;;)
 	{
 		self waittill_any("perk_acquired");
@@ -2510,6 +2513,8 @@ rotate_skydome()
 	x = 360;
 	
 	self endon("disconnect");
+	level endon("end_game");
+	level endon("game_ended");
 	for(;;)
 	{
 		x -= 0.025;
@@ -2527,6 +2532,8 @@ change_skydome()
 	x = 6500;
 	
 	self endon("disconnect");
+	level endon("end_game");
+	level endon("game_ended");
 	for(;;)
 	{
 		x += 1.626;
@@ -3432,7 +3439,9 @@ randomintlist(a)
 
 cycle_box_price() 
 {
+	level endon("end_game");
 	level endon("game_ended");
+	
 	level thread new_box_price(750); // init box price before anything 
 	level notify("box_fixed");
 	for(;;) 
