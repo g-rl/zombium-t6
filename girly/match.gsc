@@ -2616,7 +2616,7 @@ zombie_counter()
 
 		counter fadeovertime(4);
 		counter.alpha = 0;
-		wait 4;
+		wait (randomintrange(1,3));
 		continue;		
 	}
 }

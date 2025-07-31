@@ -467,7 +467,7 @@ Cooldown(aat)
 	self.aat_cooldown = 1;
 
 	if( aat == "Thunder Wall" )
-		cooldown_time = randomintrange(13, 21);
+		cooldown_time = randomintrange(15, 40);
 	else if( aat == "Fireworks" )
 		cooldown_time = randomintrange(13, 18);
     else if( aat == "Turned" )
@@ -477,7 +477,7 @@ Cooldown(aat)
     else if( aat == "Headcutter" )
 		cooldown_time = randomintrange(13, 21);
 	else if( aat == "Explosive" )
-		cooldown_time = randomintrange(5, 16);
+		cooldown_time = randomintrange(5, 23);
     else if( aat == "Blast Furnace" )
 		cooldown_time = randomintrange(13, 21);
     
