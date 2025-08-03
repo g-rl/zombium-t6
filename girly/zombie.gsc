@@ -42,14 +42,14 @@ set_run_speed_override()
 
 ai_calculate_health_override( round_number ) //checked changed to match cerberus output
 {
-	if( is_classic() )
+	if ( is_classic() )
 	{
-		if( getDvar("customMap") != "vanilla" && (round_number >= 75) && (round_number % 2) ) // insta kill rounds staring at 75 on custom survial maps then every 2 rounds after
+		if ( getDvar("customMap") != "vanilla" && (round_number >= 75) && (round_number % 2) ) // insta kill rounds staring at 75 on custom survial maps then every 2 rounds after
 		{
 			level.zombie_health = 150;
 			return;
 		}
-		else if( (round_number >= 115) && (round_number % 2) ) // insta kill rounds staring at 115 on normal maps then every 2 rounds after 
+		else if ( (round_number >= 115) && (round_number % 2) ) // insta kill rounds staring at 115 on normal maps then every 2 rounds after 
 		{
 			level.zombie_health = 150;
 			return;
@@ -57,7 +57,7 @@ ai_calculate_health_override( round_number ) //checked changed to match cerberus
 	}
 	else // insta kill rounds staring at 75 on survial maps then every 2 rounds after
 	{
-		if( (round_number >= 75) && (round_number % 2) )
+		if ( (round_number >= 75) && (round_number % 2) )
 		{
 			level.zombie_health = 150;
 			return;
@@ -65,7 +65,7 @@ ai_calculate_health_override( round_number ) //checked changed to match cerberus
 	}
 
 	// more linearly health formula - health is about the same at 60
-	if( round_number > 50 )
+	if ( round_number > 50 )
 	{	
 		round = (round_number - 50);
 		multiplier = 1;

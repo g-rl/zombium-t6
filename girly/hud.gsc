@@ -196,7 +196,7 @@ round_timer_hud()
 
 		level waittill( "start_of_round" );
 
-		if( getDvarInt( "hud_round_timer" ) >= 1 )
+		if ( getDvarInt( "hud_round_timer" ) >= 1 )
 		{
 			self.round_timer_hud FadeOverTime(level.FADE_TIME);
 			self.round_timer_hud.alpha = 1;
@@ -209,7 +209,7 @@ display_round_time(time, hordes, dog_round, leaper_round)
 	timer_for_hud = time - 0.1;
 
 	sph_off = 1;
-	if(level.round_number > 50 && !dog_round && !leaper_round)
+	if (level.round_number > 50 && !dog_round && !leaper_round)
 	{
 		sph_off = 0;
 	}
@@ -232,7 +232,7 @@ display_round_time(time, hordes, dog_round, leaper_round)
 	self.round_timer_hud.alpha = 0;
 	wait level.FADE_TIME * 2;
 
-	if(sph_off == 0)
+	if (sph_off == 0)
 	{
 		self display_sph(time, hordes);
 	}
@@ -361,14 +361,14 @@ health_bar_hud()
 
 	while( 1 )
 	{
-		if( getDvarInt( "hud_health_bar" ) == 0)
+		if ( getDvarInt( "hud_health_bar" ) == 0)
 		{	
 			self.health_bar hideelem();
 			self.health_bar_text hideelem();
 		}
 		else
 		{
-			if( isDefined(self.e_afterlife_corpse) || isDefined( self.waiting_to_revive ) && self.waiting_to_revive == 1 || self maps\mp\zombies\_zm_laststand::player_is_in_laststand() )
+			if ( isDefined(self.e_afterlife_corpse) || isDefined( self.waiting_to_revive ) && self.waiting_to_revive == 1 || self maps\mp\zombies\_zm_laststand::player_is_in_laststand() )
 			{
 				self.health_bar hideelem();
 				self.health_bar_text hideelem();
@@ -389,7 +389,7 @@ health_bar_hud()
 
 trap_timer_hud()
 {
-	if( level.script != "zm_prison" || isDefined( level.strat_tester ) && level.strat_tester )
+	if ( level.script != "zm_prison" || isDefined( level.strat_tester ) && level.strat_tester )
 		return;
 
 	create_dvar( "hud_trap_timer", 0 );
@@ -415,10 +415,10 @@ trap_timer_hud()
 	{
 		level waittill( "trap_activated" );
 		
-		if( !getDvarInt( "hud_trap_timer" ) )
+		if ( !getDvarInt( "hud_trap_timer" ) )
 			continue; 
 	
-		if( !level.trap_activated )
+		if ( !level.trap_activated )
 		{
 			self.trap_timer_hud.y = (2 + (15 * (getDvarInt("hud_timer") + getDvarInt("hud_round_timer") ) ) + self.timer_hud_offset );
 			self.trap_timer_hud.alpha = 1;
@@ -446,7 +446,7 @@ color_hud_watcher()
 		}
 
 		colors = strTok( color, " ");
-		if( colors.size != 3 )
+		if ( colors.size != 3 )
 			continue;
 
 		prev_color = color;
@@ -477,7 +477,7 @@ color_health_bar_watcher()
 		}
 
 		colors = strTok( color, " ");
-		if( colors.size != 3 )
+		if ( colors.size != 3 )
 			continue;
 
 		prev_color = color;
@@ -490,7 +490,7 @@ tab_hud()
 {
 	while(1)
 	{
-		if(self buttonPressed( "TAB" ))
+		if (self buttonPressed( "TAB" ))
 		{
 			// self notify("player_pressed_scoreboard_button");
 			self notifyonplayercommand("player_pressed_scoreboard_button", "+scores");

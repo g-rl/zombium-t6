@@ -34,10 +34,12 @@ main()
 
 init()
 {
-	level.last_update = "^3july 31th 2025";
+	level.last_update = "august 1st 2025";
 	// aat settings
     maps\mp\zombies\_zm_utility::onplayerconnect_callback(::watch_weapon_changes); 
     thread new_pap_trigger(); 
+	thread overflow_fix(); // hud updates a lot
+	thread init_powerups(); // custom powerups
 	level._poi_override = ::turned_zombie; // allow turned zombies
     
 	// game settings & killtext stuff
@@ -90,12 +92,12 @@ init()
 	level.zombie_vars["zombie_perk_juggernaut_health"] = 300;
 	level.zombie_vars["zombie_use_failsafe"] = 0;
 
+	// increase limit for powerup drops
+	level.zombie_vars["zombie_powerup_drop_max_per_round"] = 12;
+
 	set_zombie_var("zombie_use_failsafe", 0);
-
-	// dont move chests
-    level.chest_moving = 0;
-	level.chest_moves = 0;
-
+	set_zombie_var("zombie_powerup_drop_max_per_round", 12);
+	
 	level.limited_weapons = []; // everyone can get wonder weapons
 	level._limited_equipment = []; // everyone can get equipment
 	level.power_on = 1; // power is always on
@@ -103,11 +105,9 @@ init()
 	// level.custom_magic_box_timer_til_despawn = ::time_until_despawn; // weapons dont disappear out of box
 	level.revive_trigger_should_ignore_sight_checks = ::revive_trigger_should_ignore_sight_checks;
 	level thread on_player_connect();
-	level thread overflow_fix(); // hud updates a lot
     level thread fake_hitmarkers();
 	level thread cycle_box_price(); // cycle random box price
 	level thread setup_commands(); // command system (prefix is .)
-	// level thread zombie_total(); // 24 zombies allowed to spawn at once
 	level thread shared_box(); // allows for other people to pickup weapons
 	level thread new_round_hud();
 	level thread perk_machine_quarter_change(); // prone for perk points
@@ -116,11 +116,12 @@ init()
 	level thread fake_reset(); // reset game after 12h
 	level thread transit_power(); // remove lava pools & turn on power
 	level thread eye_color_watcher(); // watch zombie eye colors
-	// level thread coop_pause(); // allows pausing game with multiple people (doesnt work rn)
-
-	// dont init night mode on buried cause its way too dark
-	if (getdvar("mapname") != "zm_buried") 
+	if (getdvar("mapname") != "zm_buried") // dont init night mode on buried cause its way too dark
 		level thread night_mode();
+
+	// unused for now
+	// level thread zombie_total(); // 24 zombies allowed to spawn at once
+	// level thread coop_pause(); // allows pausing game with multiple people (doesnt work rn)
 
 	// thread everything just in case cause shits trippin
     thread zm_override(); // override base game functions
@@ -165,61 +166,36 @@ on_player_spawned()
     for(;;)
     {
         self waittill("spawned_player");
-        self thread setup_player();
+        self thread player_setup();
 		flag_wait("initial_blackscreen_passed");
-        self thread setting_perks();
-		// give max ammo
-		weaps = self getweaponslist(1);
-		foreach(weap in weaps)
-		{
-			self givemaxammo(weap);
-		}
+        self thread perk_setup();
+		self thread ammo_setup();
     }
 }
 
-setup_player()
+player_setup()
 {
-	// exo suit stuff (unused for now)
-	// self.sprint_boost = 0;
-	// self.jump_boost = 0;
-	// self.slam_boost = 0;
-	// self.exo_boost = 100;
-	// self.exosuits = true; 
-
-	self.hasPHD = true;
-	self.colorcycles = 1;
-	self.statusicon = "";
-	self.ignore_lava_damage = 1; // dont do lava damage
+	map = getdvar("mapname");
 
 	self thread init_client_dvars();
 	self thread disable_player_quotes(); // disable annoying voice lines
 	self thread max_ammo_refill_clip(); // bo4 max ammo
 	self thread map_colors(); // colors for hud
-	self thread name_status(); // check status
 	self thread perk_points(); // give points when drinking perks
 	self thread war_machine_explode_on_impact(); // better war machine
 	self thread faster_grenades(); // faster grenade explosions
 	self thread give_starting_points(); // random starting points
 	self thread set_persistent_stats(); // give all perma perks
-	self thread better_nukes(randomint(60,100)); // give more points from nukes
+	self thread better_nukes(randomint(24,35)); // give more points from nukes
 	// self thread rapid_fire(); // rapid fire for all guns
 	// self thread bind_monitor(); // for location pinging / dropping weapons
-
-	// origins settings
-	self thread carpenter_repair_shield();
-	self thread tomb_give_shovel(); // golden shovel and helmet
-
-	// motd settings
-	self thread give_tomahwak();
-	self thread electric_cherry_unlimited();
-	self thread afterlife();
 
 	// set extra perks
 	self thread speed_perks();
 	self thread jugg_perks();
 	self thread staminup_perks();
 
-	// locker settings
+	// save & give back mule kick weapons
 	self thread weapon_locker_give_ammo_after_rounds();
 	self thread additionalprimaryweapon_save_weapons();
 	self thread additionalprimaryweapon_restore_weapons();
@@ -228,34 +204,107 @@ setup_player()
 
 	if (isdefined(self.first) && self.first)
 	{
-		// setup clantags and health stuff
-		random_color = randomintrange( 1, 6 );
-		colors = random_color;
-		clantag_msg = strTok("bdnK  zmb  kta  #wdn  buford  xd  34  1c  k2  swag  zZz  yo  zombie  ai  3arc  bot  mama  gg  xo  papa  baka  wdn  bdn  2", "  "); // Rewrite later 
-		clantag_randomize = RandomInt(clantag_msg.size);
-		clantag = "^" + colors + clantag_msg[clantag_randomize];
-		self.clantag = clantag;
-		self.clantag_color = "^" + colors;
-
-		// health settings
-		random_health = randomintrange(125, 180);
-		health = random_health;
-		self.myhealth = health; // for welcome message
-		self.first = false;
-
-		// functions to only run once
-		self setnormalhealth(health);
-		self setmaxhealth(health);
-		self.health = health;
-
-		self thread timer_hud();
+		self thread dont_move_box();
+		self thread startup_vars();
+		self thread timer_hud(); // total game time timer
 		self thread zombie_counter(); // zombie counter
 		self thread graphic_tweaks();
 		self thread night_mode();
 		self thread rotate_skydome();
 		self thread welcome_message();
-		self iprintln("^3@nyli2b");
-		self iprintln("last update: " + level.last_update);
 	}
 	self thread first_free_perks();
+	self thread map_settings(map);
+}
+
+startup_vars()
+{
+	// main vars
+	// exo suit stuff (unused for now)
+	// self.sprint_boost = 0;
+	// self.jump_boost = 0;
+	// self.slam_boost = 0;
+	// self.exo_boost = 100;
+	// self.exosuits = true; 
+	self.hasPHD = true;
+	self.colorcycles = 1;
+	self.statusicon = "";
+	self.ignore_lava_damage = 1; // dont do lava damage
+
+	// setup clantags and health stuff
+	random_color = randomintrange( 2, 6 );
+	colors = random_color;
+	clantags = strTok("bdnK  zmb  kta  #wdn  buford  xd  34  1c  k2  swag  zZz  yo  zombie  ai  3arc  bot  mama  gg  xo  papa  baka  wdn  bdn  2", "  "); // Rewrite later 
+	choice = randomint(clantags.size);
+	clantag = "^" + colors + clantags[choice];
+	self.clantag = clantag;
+	self.clantag_color = "^" + colors;
+
+	// health settings
+	starting_health = randomintrange(125, 180);
+	health = starting_health;
+	self.myhealth = health;
+	self.first = false;
+	self setnormalhealth(health);
+	self setmaxhealth(health);
+	self.health = health;
+
+	self iprintln(self.clantag_color + "@nyli2b");
+	self iprintln("last update: " + self.clantag_color + level.last_update);
+
+	if (self ishost())
+		self thread start_custom_powerups();
+}
+
+map_settings(map)
+{
+	self thread name_status(); // check status
+	switch(map)
+	{
+		case "zm_tomb": // origins
+			self thread carpenter_repair_shield(); // carpenter repairs shield
+			self thread tomb_give_shovel(); // auto give golden shovel and helmet
+			self thread electric_cherry_unlimited(); // electric cherry on every reload
+			self iprintln("[^3zombium^7] loaded 3 settings for ^5origins");
+			break;
+		case "zm_prison": // motd
+			self thread give_tomahwak(); // auto give hells redeemer after 20ish seconds
+			self thread electric_cherry_unlimited(); // electric cherry on every reload
+			self thread afterlife(); // afterlife hand model at all times
+			self iprintln("[^3zombium^7] loaded 3 settings for ^1motd");
+			break;
+		case "zm_buried":
+			self iprintln("[^3zombium^7] no special settings loaded for ^3buried");
+			break;
+		case "zm_highrise":
+			self iprintln("[^3zombium^7] no special settings loaded for ^2die rise");
+			break;
+		default:
+			break;
+	}
+}
+
+ammo_setup()
+{
+	weaps = self getweaponslist(1);
+	foreach(weap in weaps)
+	{
+		self givemaxammo(weap);
+	}
+}
+
+dont_move_box()
+{
+	self endon("disconnect");
+	level endon("game_ended");
+	level endon("end_game");
+
+	for(;;)
+	{
+		// dont move box
+		self.chest_moving = 0;
+		self.chest_moves = 0;
+		self.zbarrier.chest_moving = 0;
+		wait 0.5;
+	}
 }

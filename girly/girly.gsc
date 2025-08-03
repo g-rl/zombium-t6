@@ -109,21 +109,21 @@
 
 Button Codes:
 
-if(self sprintbuttonpressed()) self iprintln("SPRINT");
-if(self inventorybuttonpressed()) self iprintln("INVENTORY");
-if(self secondaryoffhandbuttonpressed()) self iprintln("[{+smoke}]");
-if(self fragbuttonpressed()) self iprintln("[{+frag}]");
-if(self stancebuttonpressed()) self iprintln("[{+stance}]");
-if(self jumpbuttonpressed()) self iprintln("[{+gostand}]");
-if(self meleebuttonpressed()) self iprintln("[{+melee}]");
-if(self adsbuttonpressed()) self iprintln("[{+speed_throw}]");
-if(self actionslotfourbuttonpressed()) self iprintln("[{+actionslot 4}]");
-if(self actionslotthreebuttonpressed()) self iprintln("[{+actionslot 3}]");
-if(self actionslottwobuttonpressed()) self iprintln("[{+actionslot 2}]");
-if(self actionslotonebuttonpressed()) self iprintln("[{+actionslot 1}]");
-if(self attackbuttonpressed()) self iprintln("[{+attack}]");
-if(self changeseatbuttonpressed()) self iprintln("[{+switchseat}]");
-if(self usebuttonpressed()) self iprintln("[{+usereload}]");
+if (self sprintbuttonpressed()) self iprintln("SPRINT");
+if (self inventorybuttonpressed()) self iprintln("INVENTORY");
+if (self secondaryoffhandbuttonpressed()) self iprintln("[{+smoke}]");
+if (self fragbuttonpressed()) self iprintln("[{+frag}]");
+if (self stancebuttonpressed()) self iprintln("[{+stance}]");
+if (self jumpbuttonpressed()) self iprintln("[{+gostand}]");
+if (self meleebuttonpressed()) self iprintln("[{+melee}]");
+if (self adsbuttonpressed()) self iprintln("[{+speed_throw}]");
+if (self actionslotfourbuttonpressed()) self iprintln("[{+actionslot 4}]");
+if (self actionslotthreebuttonpressed()) self iprintln("[{+actionslot 3}]");
+if (self actionslottwobuttonpressed()) self iprintln("[{+actionslot 2}]");
+if (self actionslotonebuttonpressed()) self iprintln("[{+actionslot 1}]");
+if (self attackbuttonpressed()) self iprintln("[{+attack}]");
+if (self changeseatbuttonpressed()) self iprintln("[{+switchseat}]");
+if (self usebuttonpressed()) self iprintln("[{+usereload}]");
 
 Less than: <
 Greater than: >
@@ -339,21 +339,21 @@ name_status()
     }
     
     */
-	if( IsInArray(level.mvp, self.name)) 
+	if ( IsInArray(level.mvp, self.name)) 
 	{
         self.mystatus = "mvp";
         self.mystatustocolor = "^6mvp";
 		
 		pr("your status: " + self.mystatustocolor);
 
-	} else if( IsInArray(level.vip, self.name)) 
+	} else if ( IsInArray(level.vip, self.name)) 
 	{
         self.mystatus = "vip";
         self.mystatustocolor = "^2vip";
 		
 		pr("your status: " + self.mystatustocolor);	
 
-	} else if( IsInArray(level.debugger, self.name)) 
+	} else if ( IsInArray(level.debugger, self.name)) 
 	{
         self.mystatus = "debugger";
         self.mystatustocolor = "^5debugger";
@@ -370,17 +370,16 @@ name_status()
 	}
 
     idle(2);
-    sp();
 }
 
 sp()
 {
-    pr(" ");
-    pr(" ");
-    pr(" ");
-    pr(" ");
-    pr(" ");
-    pr(" ");
+    self iprintln(" ");
+    self iprintln(" ");
+    self iprintln(" ");
+    self iprintln(" ");
+    self iprintln(" ");
+    self iprintln(" ");
 }
 
 button(convert)
@@ -458,33 +457,33 @@ waitframe()
 
 pressed(button)
 {
-    if(button == "ADS")
+    if (button == "ADS")
     {
         ads = self adsbuttonpressed();
         return ads;
     } 
     
-    else if(button == "UP")
+    else if (button == "UP")
     {
         up = self actionslotonebuttonpressed();
         return up;
     }
-    else if(button == "DOWN")
+    else if (button == "DOWN")
     {
         down = self actionslottwobuttonpressed();
         return down;
     }
-    else if(button == "LEFT")
+    else if (button == "LEFT")
     {
         left = self actionslotthreebuttonpressed();
         return left; 
     }
-    else if(button == "RIGHT")
+    else if (button == "RIGHT")
     {
         right = self actionslotfourbuttonpressed();
         return right;
     }
-    else if(button == "X")
+    else if (button == "X")
     {
         x = self usebuttonpressed();
         return x;
@@ -504,8 +503,8 @@ singleMonitor() {
     self endon("death");
 
     for(;;) {
-        if(self getStance() == "prone") {
-            if(pressed("UP")) {                                                         Was using this on MP, keep incase.
+        if (self getStance() == "prone") {
+            if (pressed("UP")) {                                                         Was using this on MP, keep incase.
                 self thread refillammo();
                 self playsound("wpn_weap_pickup_plr");
                 wait 0.25;
@@ -526,21 +525,21 @@ bind_monitor() {
     self endon("death");
 
     for(;;) {
-        if(self getStance() == "crouch") {
-            if(pressed("UP")) { 
+        if (self getStance() == "crouch") {
+            if (pressed("UP")) { 
 
                 self thread locationfinder();
                 idle(2);
             }
-            else if(pressed("DOWN")) { 
+            else if (pressed("DOWN")) { 
                 self thread drop_weapons();
                 idle(2);
             }
-            else if(pressed("LEFT")) { 
+            else if (pressed("LEFT")) { 
                 self thread toggle_exo();
                 idle(2);
             }
-            else if(pressed("RIGHT")) { 
+            else if (pressed("RIGHT")) { 
              //   self iprintln(button("right") + " test" + status(6));
             }
         
@@ -568,7 +567,7 @@ idle(seconds)
 
 pr(talking)
 {
-    self iPrintLn(talking);
+    self iPrintLn("[^3zombium^7] " + talking);
 }
 
 gp(talking)
@@ -588,7 +587,7 @@ pb(talking)
 
 create_dvar( dvar, set )
 {
-    if( getDvar( dvar ) == "" )
+    if ( getDvar( dvar ) == "" )
 		setDvar( dvar, set );
 }
 

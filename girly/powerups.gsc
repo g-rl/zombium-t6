@@ -183,7 +183,7 @@ powerup_drop_override( drop_point ) //checked partially changed to match cerberu
 	}
 
 	// play fx on last drop of cycle
-	if( is_true(level.last_powerup) )
+	if ( is_true(level.last_powerup) )
 	{
 		// playfx(level._effect[ "upgrade_aquired" ], powerup.origin);
 		playfx( level._effect[ "fx_zombie_powerup_caution_wave" ], powerup.origin );
@@ -388,4 +388,213 @@ point_doubler_on_hud_override( drop_item, player_team ) //checked matches cerber
 	}
 	level.zombie_vars[ player_team ][ "zombie_powerup_point_doubler_on" ] = 1;
 	level thread time_remaining_on_point_doubler_powerup( player_team );
+}
+
+init_powerups() 
+{
+	level.disable_firesale_drop = undefined;
+    perk_model = getweaponmodel( randomize("zombie_perk_bottle_doubletap;zombie_perk_bottle_jugg;zombie_perk_bottle_marathon;zombie_perk_bottle_revive;zombie_perk_bottle_sleight") );
+	/*  CURRENT - (Custom Powerups will glow white)
+		Stock Ammo Increase (UEM Inspired)
+		Random Perk
+		Bonus Points (Self + Team)	
+		Pack a Punch
+		Discovery Points 							*/
+	
+	/#	Add this little check because the money icon doesnt exist on motd lol
+	 	Will probably have to do this for a lot of other things as well #/
+
+	map = GetDvar("mapname");
+	model = "zombie_z_money_icon";
+	if(map == "zm_prison") model = "t6_wpn_zmb_tomahawk_world";
+
+    include_powerup("ammo", "zombie_ammocan", 0, 1, 0);
+    include_powerup("perks", perk_model, 0, 1, 0);
+    include_powerup("points", model, 0, 1, 1);
+    include_powerup("pointsteam", model, 1, 1, 1);
+    include_powerup("takepoints", model, 0, 1, 1);
+    include_powerup("take_team_points", model, 1, 1, 1);
+    include_powerup("pack", level.chest_joker_model, 0, 1, 1);
+}
+
+include_powerup(powerup, model, glowing, laststand, check, fx, id) 
+{ 
+	if(glowing == 1) {
+		t = &"ZOMBIE_POWERUP_CUSTOM"; // WONT WORKKKK fml
+	} else {
+		t = "i";
+	}
+    include_zombie_powerup(powerup); 
+	add_zombie_powerup(powerup, model, t, ::func_should_always_drop, laststand, 0, 0, fx);
+	powerup_set_can_pick_up_in_last_stand(powerup, check);
+}
+
+start_custom_powerups() 
+{
+    if(self isHost() && !isDefined(level.custom_powerup_first_spawn)) {
+        wait 2;
+		pr("custom powerups initiated");
+        if(isDefined(level._zombiemode_powerup_grab))
+            level.original_zombiemode_powerup_grab = level._zombiemode_powerup_grab;
+        level._zombiemode_powerup_grab = ::custom_powerup_func;
+        level.custom_powerup_first_spawn = "ammo"; // Need this but don't need to set it to anything specific
+        }
+}
+
+custom_powerup_func(powerup, u) 
+{
+    name = powerup.powerup_name;
+	switch( name ) {
+		case "ammo":
+			level thread Powerup("ammo", ::do_ammo, u, u, "Ammo");
+			break;
+		case "perks":
+			level thread Powerup("perks", ::do_perks, u, u, "Perks");
+			break;
+		case "points":
+			level thread Powerup("points", ::points_to_player, u, u, "Points");
+			break;
+		case "pointsteam":
+			level thread Powerup("pointsteam", ::points_to_team, undefined, u, "Team Points");
+			break;
+		case "takepoints":
+			level thread Powerup("takepoints", ::take_player_points, u, u, "Point Loss");
+			break;
+		case "take_team_points":
+			level thread Powerup("take_team_points", ::take_team_points, undefined, u, "Team Point Loss");
+			break;
+		case "pack":
+			level thread Powerup("pack", ::weapon_upgrades, u, u, "Pack a Punch");
+			break;
+		default:
+			print("non custom powerup");
+			break;
+	}
+}
+
+powerup(powerup, func, args, u, display) 
+{
+	name = powerup.powerup_name;
+	if (name == powerup)
+		level thread [[func]](args, powerup);
+	else if (isDefined(level.original_zombiemode_powerup_grab))
+		level thread [[level.original_zombiemode_powerup_grab]](powerup, u);
+
+	u notify("custom_powerup"); // fixes giving an extra point with discovery powerup
+	playfx( level._effect[ "poltergeist" ], u.origin);
+}
+
+do_perks(u) 
+{
+	u thread give_random_perk();
+	sound = "evt_bottle_dispense";
+	playsoundatposition( sound, u.origin );
+	u notify( "player_received_ghost_round_free_perk" );
+}
+
+do_ammo(u) 
+{
+	weap = u getCurrentWeapon();
+	clip_size = weaponclipsize( weap );
+	stock = u getWeaponAmmoStock( weap );
+	amnt = stock / amnt * 1.8;
+
+	if(weap == "m1911_upgraded_zm") 
+	{
+		points = randomintrange( 1, 15 ) * 100;
+		u.score += points;
+		print("Has Mustang & Sally, giving points instead.");
+	} 
+	else 
+	{
+		u setWeaponAmmoStock( weap, amnt );
+		u setWeaponAmmoClip(weap, clip_size);
+	}
+}
+
+points_to_player(u) 
+{
+    points = randomintrange( 1, 25 ) * 100;
+	u.score += points;
+}
+
+points_to_team() 
+{
+    points = randomintrange( 1, 25 ) * 100;
+	foreach(u in level.players) 
+	{
+		u.score += points;
+    }
+}
+
+take_player_points(u) 
+{
+    points = randomintrange( 1, 5 ) * 100;
+	u.score -= points;
+}
+
+take_team_points() 
+{
+    points = randomintrange( 1, 5 ) * 100;
+	foreach(u in level.players) 
+	{
+		u.score -= points;
+    }
+}
+
+weapon_upgrades(u) 
+{
+	baseweapon = get_base_name(u getcurrentweapon());
+	weapon = get_upgrade(baseweapon);
+	if (isdefined(weapon)) 
+	{
+		if(self.pers["upgraded_weapon"] != weapon) 
+		{
+			u takeweapon(baseweapon);
+			u giveweapon(weapon, 0, u get_pack_a_punch_weapon_options(weapon));
+			u switchtoweapon(weapon);
+			u givemaxammo(weapon);
+			self.pers["upgraded_weapon"] = weapon;
+		}
+	} else {
+		u.score += randomintrange(3,5) * 100;
+	}
+}
+
+get_upgrade(weapon) 
+{
+    if (isdefined(level.zombie_weapons[weapon]) && isdefined(level.zombie_weapons[weapon].upgrade_name))
+        return get_upgrade_weapon(weapon, 0);
+    return get_upgrade_weapon(weapon, 1);
+}
+
+give_random_perk()
+{
+    random_perk = undefined;
+    vending_triggers = getentarray( "zombie_vending", "targetname" );
+    perks = [];
+    for ( i = 0; i < vending_triggers.size; i++ )
+    {
+        perk = vending_triggers[i].script_noteworthy;
+
+        if ( isdefined( self.perk_purchased ) && self.perk_purchased == perk )
+            continue;
+
+        //if ( perk == "specialty_weapupgrade" )
+         //   continue;
+
+        if ( !self hasperk( perk ) && !self has_perk_paused( perk ) )
+            perks[perks.size] = perk;
+    }
+
+    if ( perks.size > 0 )
+    {
+        perks = array_randomize( perks );
+        random_perk = perks[0];
+        self give_perk( random_perk );
+    }
+    else
+        self thread imsg( "You have all perks!" );
+
+    return random_perk;
 }

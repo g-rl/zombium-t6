@@ -112,10 +112,10 @@ player_aat_damage_respond( einflictor, eattacker, idamage, idflags, smeansofdeat
 	players = get_players();
 	for(i=0;i<players.size;i++)
 	{
-		if( isdefined(players[i].gluster_grenade) && eattacker == players[i].gluster_grenade )
+		if ( isdefined(players[i].gluster_grenade) && eattacker == players[i].gluster_grenade )
 			return 0;
 		
-		if( isdefined(players[i].firework_weapon) && eattacker == players[i].firework_weapon )
+		if ( isdefined(players[i].firework_weapon) && eattacker == players[i].firework_weapon )
 			return 0;
 	}
 	return idamage;
@@ -158,21 +158,21 @@ new_pap_trigger()
     level waittill("Pack_A_Punch_on");
     wait 2;
 	
-	if(getdvar( "mapname" ) != "zm_transit" && getdvar ( "g_gametype") != "zstandard")
+	if (getdvar( "mapname" ) != "zm_transit" && getdvar ( "g_gametype") != "zstandard")
 	{
 		level notify("Pack_A_Punch_off");
 		level thread pap_off();
 	}
 
-    if( getdvar( "mapname" ) == "zm_nuked" )
+    if ( getdvar( "mapname" ) == "zm_nuked" )
         level waittill( "Pack_A_Punch_on" );
     
 	perk_machine = getent( "vending_packapunch", "targetname" );
     pap_triggers = getentarray( "specialty_weapupgrade", "script_noteworthy" );
     pap_triggers[0] delete();
-	if( getdvar( "mapname" ) == "zm_transit" && getdvar ( "g_gametype")  == "zclassic" )
+	if ( getdvar( "mapname" ) == "zm_transit" && getdvar ( "g_gametype")  == "zclassic" )
 	{
-		if(!level.buildables_built[ "pap" ])
+		if (!level.buildables_built[ "pap" ])
 			level waittill("pap_built");
 	}
 	wait 1;
@@ -182,7 +182,7 @@ new_pap_trigger()
 	packa_timer = spawn( "script_origin", perk_machine.origin );
 	packa_rollers linkto( perk_machine );
 	packa_timer linkto( perk_machine );
-	if( getdvar( "mapname" ) == "zm_highrise" )
+	if ( getdvar( "mapname" ) == "zm_highrise" )
 	{
 		Trigger = spawn( "trigger_radius", perk_machine.origin, 1, 60, 80 );
 		Trigger enableLinkTo();
@@ -202,14 +202,14 @@ new_pap_trigger()
 	{
 		Trigger waittill("trigger", player);
 		current_weapon = player getcurrentweapon();
-        if(current_weapon == "saritch_upgraded_zm+dualoptic" || current_weapon == "dualoptic_saritch_upgraded_zm+dualoptic" || current_weapon == "slowgun_upgraded_zm" || current_weapon == "staff_air_zm" || current_weapon == "staff_lightning_zm" || current_weapon == "staff_fire_zm" || current_weapon == "staff_water_zm" )
+        if (current_weapon == "saritch_upgraded_zm+dualoptic" || current_weapon == "dualoptic_saritch_upgraded_zm+dualoptic" || current_weapon == "slowgun_upgraded_zm" || current_weapon == "staff_air_zm" || current_weapon == "staff_lightning_zm" || current_weapon == "staff_fire_zm" || current_weapon == "staff_water_zm" )
         {
             Trigger sethintstring( "^1This weapon can not be upgraded." );
 			wait .05;
             continue;
         }
 		
-		if(player UseButtonPressed() && player.score >= cost && current_weapon != "riotshield_zm" && player can_buy_weapon() && !player.is_drinking && !is_placeable_mine( current_weapon ) && !is_equipment( current_weapon ) && level.revive_tool != current_weapon && current_weapon != "none" )
+		if (player UseButtonPressed() && player.score >= cost && current_weapon != "riotshield_zm" && player can_buy_weapon() && !player.is_drinking && !is_placeable_mine( current_weapon ) && !is_equipment( current_weapon ) && level.revive_tool != current_weapon && current_weapon != "none" )
         {
 			player.score -= cost;
             player thread maps\mp\zombies\_zm_audio::play_jingle_or_stinger( "mus_perks_packa_sting" );
@@ -262,12 +262,12 @@ new_pap_trigger()
 			flag_clear( "pack_machine_in_use" );
 		}
 		weapon = player getcurrentweapon();
-		if(isdefined(level._bonfire_sale) && level._bonfire_sale)
+		if (isdefined(level._bonfire_sale) && level._bonfire_sale)
 		{
 			Trigger sethintstring( "			Hold ^3&&1^7 for Pack-a-Punch [Cost: 1000] \n Weapons can be pack a punched multiple times" );
 			cost = 1000;
 		}
-		else if(is_weapon_upgraded(weapon))
+		else if (is_weapon_upgraded(weapon))
 		{
 			Trigger sethintstring( "			Hold ^3&&1^7 for Pack-a-Punch [Cost: 4000] \n Weapons can be pack a punched multiple times" );
 			cost = 4000;
@@ -289,22 +289,22 @@ wait_for_pick(player, weapon, upgrade_weapon)
 	{
 		self playloopsound( "zmb_perks_packa_ticktock" );
 		self waittill( "trigger", user );
-		if(user UseButtonPressed() && player == user)
+		if (user UseButtonPressed() && player == user)
 		{	
 			self stoploopsound( 0.05 );
 			player thread do_player_general_vox( "general", "pap_arm2", 15, 100 );
 
             base = get_base_name(weapon);
-			if(is_weapon_upgraded( weapon ))
+			if (is_weapon_upgraded( weapon ))
 			{
 				player.restore_ammo = 1;
                 
-				if( weapon == "galil_upgraded_zm+reflex" || weapon  == "fnfal_upgraded_zm+reflex" || base == "ak74u_upgraded_zm" || base  == "galil_upgraded_zm"  || base  == "fnfal_upgraded_zm")
+				if ( weapon == "galil_upgraded_zm+reflex" || weapon  == "fnfal_upgraded_zm+reflex" || base == "ak74u_upgraded_zm" || base  == "galil_upgraded_zm"  || base  == "fnfal_upgraded_zm")
                 	player thread give_aat(weapon); //Alternative ammo type for galil and fnfal upgraded
 				else
 					player thread give_aat(upgrade_weapon); //Alternative ammo type for all other weapons
 			}
-			else if( weapon == "galil_upgraded_zm+reflex" || weapon  == "fnfal_upgraded_zm+reflex" || base == "ak74u_upgraded_zm" )
+			else if ( weapon == "galil_upgraded_zm+reflex" || weapon  == "fnfal_upgraded_zm+reflex" || base == "ak74u_upgraded_zm" )
 			{
 				player giveweapon( weapon, 0, player maps\mp\zombies\_zm_weapons::get_pack_a_punch_weapon_options( weapon ));
 				player switchToWeapon( weapon );
@@ -339,38 +339,38 @@ wait_for_pick(player, weapon, upgrade_weapon)
 
 aat_zombie_damage_response( mod, hit_location, hit_origin, attacker, amount )
 {
-    if(!can_aat_damage(self))
+    if (!can_aat_damage(self))
 		return 0;
 
-    if(!isDefined(attacker.aat_cooldown))
+    if (!isDefined(attacker.aat_cooldown))
         attacker.aat_cooldown = 0;
     
-	if(isdefined( self.damageweapon ))
+	if (isdefined( self.damageweapon ))
 	{
-		if(isdefined( attacker ) && isplayer( attacker ) && isdefined(attacker.aat_cooldown) && !attacker.aat_cooldown)
+		if (isdefined( attacker ) && isplayer( attacker ) && isdefined(attacker.aat_cooldown) && !attacker.aat_cooldown)
 		{
             zombies = getaiarray( level.zombie_team );
 
-            if(randomint(100) >= 75 && self turned_zombie_validation() && !attacker.active_turned && isdefined(attacker.aat[self.damageweapon]) && attacker.aat[self.damageweapon] == "Turned")
+            if (randomint(100) >= 75 && self turned_zombie_validation() && !attacker.active_turned && isdefined(attacker.aat[self.damageweapon]) && attacker.aat[self.damageweapon] == "Turned")
             {
                 attacker thread Cooldown("Turned");
                 self thread turned( attacker );
                 return 1;
             }
-            if(randomint(100) >= 80 && isdefined(attacker.aat[self.damageweapon]) && attacker.aat[self.damageweapon] == "Cluster")
+            if (randomint(100) >= 80 && isdefined(attacker.aat[self.damageweapon]) && attacker.aat[self.damageweapon] == "Cluster")
             {
                 attacker thread Cooldown("Cluster");
                 self thread cluster( attacker );
                 return 1;
             }
-            if(randomint(100) >= 70 && isdefined(attacker.aat[self.damageweapon]) && attacker.aat[self.damageweapon] == "Headcutter")
+            if (randomint(100) >= 70 && isdefined(attacker.aat[self.damageweapon]) && attacker.aat[self.damageweapon] == "Headcutter")
             {
                 attacker thread Cooldown("Headcutter");
                 for( i=0; i < zombies.size; i++ )
                 {
-                    if(distance(self.origin, zombies[i].origin) <= 200)
+                    if (distance(self.origin, zombies[i].origin) <= 200)
                     {
-                        if(!zombies[i].done && can_aat_damage(zombies[i]))
+                        if (!zombies[i].done && can_aat_damage(zombies[i]))
                         {
                             zombies[i].done = 1;
                             zombies[i] thread Headcutter(attacker);
@@ -379,26 +379,26 @@ aat_zombie_damage_response( mod, hit_location, hit_origin, attacker, amount )
                 }
                 return 1;
             }
-            if(randomint(100) >= 80 && isdefined(attacker.aat[self.damageweapon]) && attacker.aat[self.damageweapon] == "Thunder Wall")
+            if (randomint(100) >= 80 && isdefined(attacker.aat[self.damageweapon]) && attacker.aat[self.damageweapon] == "Thunder Wall")
             {
                 attacker setclientdvar( "ragdoll_enable", 1);
                 self thread thunderwall(attacker);
                 attacker thread Cooldown("Thunder Wall");
                 return 1;                
             }
-            if(randomint(100) >= 75 && isdefined(attacker.aat[self.damageweapon]) && attacker.aat[self.damageweapon] == "Blast Furnace")
+            if (randomint(100) >= 75 && isdefined(attacker.aat[self.damageweapon]) && attacker.aat[self.damageweapon] == "Blast Furnace")
             {
                 attacker thread Cooldown("Blast Furnace");
                 PlayFXOnTag(level._effect[ "character_fire_death_torso" ], self, "j_spinelower");
                 PlayFXOnTag(level._effect[ "character_fire_death_sm" ], self, "j_spineupper");
                 for( i = 0; i < zombies.size; i++ )
                 {
-                    if(distance(self.origin, zombies[i].origin) <= 220 && can_aat_damage(zombies[i]))
+                    if (distance(self.origin, zombies[i].origin) <= 220 && can_aat_damage(zombies[i]))
                         zombies[i] thread flames_fx(attacker);
                 }
                 return 1;
             }
-            if(randomint(100) >= 80 && isdefined(attacker.aat[self.damageweapon]) && attacker.aat[self.damageweapon] == "Fireworks")
+            if (randomint(100) >= 80 && isdefined(attacker.aat[self.damageweapon]) && attacker.aat[self.damageweapon] == "Fireworks")
             {
                 attacker thread Cooldown("Fireworks");
                 self thread spawn_weapon( attacker );
@@ -417,7 +417,7 @@ watch_weapon_changes()
 	self waittill("spawned_player");
 	flag_wait("initial_blackscreen_passed");
 
-    if(getdvar("mapname") == "zm_prison") //prevent triggering weapon change when spawning in motd
+    if (getdvar("mapname") == "zm_prison") //prevent triggering weapon change when spawning in motd
         level waittill("start_of_round");
 
     self thread explosive_bullet(); //start explosive bullet background
@@ -427,33 +427,33 @@ watch_weapon_changes()
 		result = self waittill_any_return( "weapon_change", "fake_death", "player_downed" );
 		weapon = self getCurrentWeapon();
 
-		if(result == "player_downed" || result == "fake_death")
+		if (result == "player_downed" || result == "fake_death")
 		{
-			if(self hasperk("specialty_scavenger") || self hasperk("specialty_finalstand"))
+			if (self hasperk("specialty_scavenger") || self hasperk("specialty_finalstand"))
 			{
-				if(self hasperk("specialty_scavenger"))
+				if (self hasperk("specialty_scavenger"))
 					self thread tombstone_timeout();
 
 				self waittill_any("player_revived", "dance_on_my_grave", "tombstone_timedout", "chugabud_bleedout", "chugabud_effects_cleanup");
 			}
 		}
 
-        if(isdefined(self.afterlife) && self.afterlife)
+        if (isdefined(self.afterlife) && self.afterlife)
 			self waittill("spawned_player");
 
 		name = undefined;
 
-		if( IsDefined( self.aat[weapon] ) )
+		if ( IsDefined( self.aat[weapon] ) )
 			name = self.aat[weapon];
 
 		self aat_hud(name);
 
-		if( IsDefined( self.aat ) )
+		if ( IsDefined( self.aat ) )
 		{
 			keys = GetArrayKeys( self.aat );
 			foreach( aat in keys )
 			{
-				if(IsDefined( self.aat[aat] ) && isdefined( aat ) && !self hasweapon( aat ))
+				if (IsDefined( self.aat[aat] ) && isdefined( aat ) && !self hasweapon( aat ))
 					self.aat[aat] = undefined;
 			}
 		}
@@ -466,19 +466,19 @@ Cooldown(aat)
 
 	self.aat_cooldown = 1;
 
-	if( aat == "Thunder Wall" )
+	if ( aat == "Thunder Wall" )
 		cooldown_time = randomintrange(15, 40);
-	else if( aat == "Fireworks" )
+	else if ( aat == "Fireworks" )
 		cooldown_time = randomintrange(13, 18);
-    else if( aat == "Turned" )
+    else if ( aat == "Turned" )
 		cooldown_time = randomintrange(13, 21);
-	else if( aat == "Cluster" )
+	else if ( aat == "Cluster" )
 		cooldown_time = randomintrange(13, 26);
-    else if( aat == "Headcutter" )
+    else if ( aat == "Headcutter" )
 		cooldown_time = randomintrange(13, 21);
-	else if( aat == "Explosive" )
+	else if ( aat == "Explosive" )
 		cooldown_time = randomintrange(5, 23);
-    else if( aat == "Blast Furnace" )
+    else if ( aat == "Blast Furnace" )
 		cooldown_time = randomintrange(13, 21);
     
 	wait cooldown_time;
@@ -494,12 +494,12 @@ explosive_bullet()
 	{
 		self waittill( "weapon_fired", weapon );
 
-        if(getdvar("mapname") == "zm_tomb" || getdvar("mapname") == "zm_buried")
+        if (getdvar("mapname") == "zm_tomb" || getdvar("mapname") == "zm_buried")
 			fx = level._effect[ "divetonuke_groundhit" ];
         else
             fx = level._effect[ "def_explosion" ];
 
-		if(!self.aat_cooldown && isdefined(self.aat[weapon]) && self.aat[weapon] == "Explosive")
+		if (!self.aat_cooldown && isdefined(self.aat[weapon]) && self.aat[weapon] == "Explosive")
 		{
 			self thread Cooldown("Explosive");
 			forward = self gettagorigin( "tag_weapon_right" );
@@ -508,7 +508,7 @@ explosive_bullet()
 			crosshair = bullettrace( forward, end, 0, self )[ "position"];
 			magicbullet( self getcurrentweapon(), self gettagorigin( "j_shouldertwist_le" ), crosshair, self );
 			self enableInvulnerability();
-			if(isdefined(crosshair_entity))
+			if (isdefined(crosshair_entity))
 			{
 				crosshair_entity playsound( "zmb_phdflop_explo" );
 				playfx(fx, crosshair_entity.origin, anglestoforward( ( 0, 45, 55  ) ) );
@@ -533,7 +533,7 @@ flames_fx(attacker)
 	{
 		PlayFXOnTag(level._effect[ "character_fire_death_sm" ], self, "j_spineupper");
 
-		if(i < 3)
+		if (i < 3)
 		{
 			self dodamage(self.health / 2, (0,0,0));
 			attacker.score += 10;
@@ -552,7 +552,7 @@ fireworks()
 	level endon("end_game");
 	origin = self.origin;
 
-	if(getdvar("mapname") == "zm_buried")
+	if (getdvar("mapname") == "zm_buried")
     {
 		for(i=0;i<10;i++)
         {
@@ -590,7 +590,7 @@ fireworks()
         }
     }
 
-	if(getdvar("mapname") == "zm_highrise")
+	if (getdvar("mapname") == "zm_highrise")
     {
         for(i=0;i<22;i++)
         {
@@ -604,7 +604,7 @@ fireworks()
         }
     }
 
-    if(getdvar("mapname") == "zm_tomb")
+    if (getdvar("mapname") == "zm_tomb")
     {
         for(i=0;i<20;i++)
         {
@@ -617,7 +617,7 @@ fireworks()
             fx delete();
         }
     }
-    else if(getdvar("mapname") == "zm_transit" && getdvar ( "g_gametype")  == "zclassic" )
+    else if (getdvar("mapname") == "zm_transit" && getdvar ( "g_gametype")  == "zclassic" )
     {
         for(i=0;i<5;i++)
         {
@@ -650,13 +650,13 @@ spawn_weapon(attacker)
         zombies = get_array_of_closest( attacker.firework_weapon.origin, getaiarray( level.zombie_team ), undefined, undefined, 300  );
         forward = attacker.firework_weapon.origin;
         
-        if( can_aat_damage( zombies[ 0 ] ) )
+        if ( can_aat_damage( zombies[ 0 ] ) )
         {
             end = zombies[ 0 ] gettagorigin( "j_spineupper" );
             crosshair = bullettrace( forward, end, 0, self )[ "position" ];
             attacker.firework_weapon.angles = VectorToAngles( end - attacker.firework_weapon.origin );
 
-            if( distance(zombies[ 0 ].origin, attacker.firework_weapon.origin) <= 300)
+            if ( distance(zombies[ 0 ].origin, attacker.firework_weapon.origin) <= 300)
                 magicbullet( weapon, attacker.firework_weapon.origin, crosshair, attacker.firework_weapon );
         }
         wait .05;
@@ -679,18 +679,18 @@ thunderwall( attacker )
     max_zombies = randomIntRange(5,25);
 	for ( i = 0; i < ai_zombies.size; i++ )
 	{
-		if( can_aat_damage(ai_zombies[i]) )
+		if ( can_aat_damage(ai_zombies[i]) )
         {
 			n_random_x = RandomFloatRange( -3, 3 );
 			n_random_y = RandomFloatRange( -3, 3 );
 			ai_zombies[i] StartRagdoll();
 			ai_zombies[i] LaunchRagdoll( (n_random_x, n_random_y, 150) );
 
-			if(getdvar("mapname") == "zm_transit")
+			if (getdvar("mapname") == "zm_transit")
 	            playfxontag( level._effect[ "jetgun_smoke_cloud"], ai_zombies[i], "J_SpineUpper" );
-            else if(getdvar("mapname") == "zm_tomb")
+            else if (getdvar("mapname") == "zm_tomb")
 				playfxontag( level._effect[ "air_puzzle_smoke" ], ai_zombies[i], "J_SpineUpper" );
-			else if(getdvar("mapname") == "zm_buried")
+			else if (getdvar("mapname") == "zm_buried")
 				playfxontag( level._effect[ "rise_billow_foliage" ], ai_zombies[i], "J_SpineUpper" );
         	
 			ai_zombies[i] DoDamage( ai_zombies[i].health * 2, ai_zombies[i].origin, attacker, attacker, "none", "MOD_IMPACT" );
@@ -716,7 +716,7 @@ Headcutter(attacker)
 
 cluster( attacker )
 {
-	if(level.round_number < 10)
+	if (level.round_number < 10)
 		amount = randomIntRange(1, (level.round_number * 2));
 	else
 		amount = randomIntRange(5, level.round_number);
@@ -744,7 +744,7 @@ turned( attacker )
 	self thread set_zombie_run_cycle( "sprint" );
 	self.custom_goalradius_override = 1000000;
 
-    if(getdvar("mapname") == "zm_tomb")
+    if (getdvar("mapname") == "zm_tomb")
         turned_fx = playfxontag(level._effect[ "staff_soul" ], self, "j_head");
     else
         turned_fx = playfxontag(level._effect["powerup_on_solo"], self, "j_head");
@@ -753,7 +753,7 @@ turned( attacker )
 	self.team = level.players; 
 	self.ignore_enemy_count = 1;
 
-	if(getdvar("mapname") == "zm_tomb")
+	if (getdvar("mapname") == "zm_tomb")
 		attackanim = "zm_generator_melee";
 	else
 		attackanim = "zm_riotshield_melee";
@@ -764,7 +764,7 @@ turned( attacker )
 	while(isAlive(self))
 	{
 		ai_zombies = get_array_of_closest( self.origin, getaiarray( level.zombie_team ), undefined, undefined, undefined  );
-		if(isdefined(ai_zombies[1]) && can_aat_damage(ai_zombies[1]))
+		if (isdefined(ai_zombies[1]) && can_aat_damage(ai_zombies[1]))
 		{
 			enemyoverride[0] = ai_zombies[1].origin;
 			enemyoverride[1] = ai_zombies[1];
@@ -775,7 +775,7 @@ turned( attacker )
 			enemyoverride[1] = ai_zombies[0];
 		}
 		self.enemyoverride = enemyoverride;	
-		if(distance(self.origin, ai_zombies[1].origin) < 40 && isalive(ai_zombies[1]) )
+		if (distance(self.origin, ai_zombies[1].origin) < 40 && isalive(ai_zombies[1]) )
 		{
 			angles = VectorToAngles( ai_zombies[1].origin - self.origin );
 			self animscripted( self.origin, angles, attackanim );
@@ -785,7 +785,7 @@ turned( attacker )
 			attacker.score += 50;
 			attacker.pers["score"] = attacker.score;
 
-			if(self.turned_zombie_kills > self.max_kills)
+			if (self.turned_zombie_kills > self.max_kills)
 			{
                 turned_fx delete();
 				self.is_turned = 0;
@@ -803,19 +803,19 @@ turned( attacker )
 	attacker.active_turned = 0;
 	self.is_turned = 0;
 
-    if(isdefined(turned_fx))
+    if (isdefined(turned_fx))
         turned_fx delete();
 }
 
 turned_damage_respond( einflictor, eattacker, idamage, idflags, smeansofdeath, sweapon, vpoint, vdir, shitloc, psoffsettime, boneindex )
 {
-    if(self.is_turned)
+    if (self.is_turned)
         return 0;
 }
 
 turned_zombie()
 {
-	if(self.turned)
+	if (self.turned)
 	{
 		//attack zombies
 	}
@@ -827,7 +827,7 @@ turned_zombie()
 
 turned_zombie_validation()
 {	
-	if( IS_TRUE( self.barricade_enter ) )
+	if ( IS_TRUE( self.barricade_enter ) )
 		return false;
 	
 	if ( IS_TRUE( self.is_traversing ) )
@@ -852,24 +852,24 @@ is_true(check)
 
 give_aat(weapon)
 {		
-	if(!isDefined(self.aat))
+	if (!isDefined(self.aat))
 		self.aat = [];
 
-    if(isdefined(self.old_aat))
+    if (isdefined(self.old_aat))
     {
-        if(self.old_aat == "Thunder Wall")
+        if (self.old_aat == "Thunder Wall")
             self.old_aat = 0;
-        else if(self.old_aat == "Fireworks")
+        else if (self.old_aat == "Fireworks")
             self.old_aat = 1;
-        else if(self.old_aat == "Turned")
+        else if (self.old_aat == "Turned")
             self.old_aat = 2;
-        else if(self.old_aat == "Cluster")
+        else if (self.old_aat == "Cluster")
             self.old_aat = 3;
-        else if(self.old_aat == "Headcutter")
+        else if (self.old_aat == "Headcutter")
             self.old_aat = 4;
-        else if(self.old_aat == "Explosive")
+        else if (self.old_aat == "Explosive")
             self.old_aat = 5;
-        else if(self.old_aat == "Blast Furnace")
+        else if (self.old_aat == "Blast Furnace")
             self.old_aat = 6;
     }
 
@@ -883,19 +883,19 @@ give_aat(weapon)
 		wait .05;
 	}
 	
-	if(number == 0)
+	if (number == 0)
 		name = "Thunder Wall";
-	else if(number == 1)
+	else if (number == 1)
 		name = "Fireworks";
-    else if(number == 2)
+    else if (number == 2)
         name = "Turned";
-    else if(number == 3)
+    else if (number == 3)
         name = "Cluster";
-    else if(number == 4)
+    else if (number == 4)
         name = "Headcutter";
-    else if(number == 5)
+    else if (number == 5)
         name = "Explosive";
-    else if(number == 6)
+    else if (number == 6)
         name = "Blast Furnace";
 
 	self.aat[weapon] = name;
@@ -922,42 +922,42 @@ aat_hud(name)
 {
 	self endon("disconnect");
 
-    if(isdefined(self.aat_hud))
+    if (isdefined(self.aat_hud))
 		self.aat_hud destroy();
 
-	if(isDefined(name))
+	if (isDefined(name))
 	{
-		if(name == "Thunder Wall")
+		if (name == "Thunder Wall")
         {
 			label = &"Thunder Wall";
             color = (0,1,1);
         }
-		else if(name == "Fireworks")
+		else if (name == "Fireworks")
 		{
         	label = &"Fireworks";
             color = (0,1,0);
 		}
-        else if(name == "Turned")
+        else if (name == "Turned")
 		{
         	label = &"Turned";
             color = (1,0.5,0.5);
 		}
-        else if(name == "Cluster")
+        else if (name == "Cluster")
 		{
         	label = &"Cluster";
             color = (0.4,0.4,0.2);
 		}
-        else if(name == "Headcutter")
+        else if (name == "Headcutter")
 		{
         	label = &"Headcutter";
             color = (1,0,1);
 		}
-        else if(name == "Explosive")
+        else if (name == "Explosive")
 		{
         	label = &"Explosive";
             color = (0,0,1);
 		}
-        else if(name == "Blast Furnace")
+        else if (name == "Blast Furnace")
 		{
         	label = &"Blast Furnace";
             color = (1,0,0);
@@ -967,12 +967,12 @@ aat_hud(name)
         self.aat_hud.aligny = "bottom";
         self.aat_hud.horzalign = "user_right";
         self.aat_hud.vertalign = "user_bottom";
-        if( getdvar( "mapname" ) == "zm_transit" || getdvar( "mapname" ) == "zm_highrise" || getdvar( "mapname" ) == "zm_nuked")
+        if ( getdvar( "mapname" ) == "zm_transit" || getdvar( "mapname" ) == "zm_highrise" || getdvar( "mapname" ) == "zm_nuked")
         {
             self.aat_hud.x = -85;
             self.aat_hud.y = -22;
         }
-		else if( getdvar( "mapname" ) == "zm_tomb" )
+		else if ( getdvar( "mapname" ) == "zm_tomb" )
         {
             self.aat_hud.x = -110;
             self.aat_hud.y = -80;
@@ -993,13 +993,13 @@ aat_hud(name)
 
 can_aat_damage(ai_zombies)
 {
-    if(isdefined(ai_zombies.is_turned) && ai_zombies.is_turned)
+    if (isdefined(ai_zombies.is_turned) && ai_zombies.is_turned)
         return 0;
 
-    if(isdefined(level.sloth) && ai_zombies == level.sloth)
+    if (isdefined(level.sloth) && ai_zombies == level.sloth)
         return 0;
 
-    if(isDefined(ai_zombies.is_avogadro) && ai_zombies.is_avogadro || isDefined(ai_zombies.is_brutus) && ai_zombies.is_brutus || isDefined(ai_zombies.is_mechz) && ai_zombies.is_mechz )
+    if (isDefined(ai_zombies.is_avogadro) && ai_zombies.is_avogadro || isDefined(ai_zombies.is_brutus) && ai_zombies.is_brutus || isDefined(ai_zombies.is_mechz) && ai_zombies.is_mechz )
         return 0;
 
     return 1;

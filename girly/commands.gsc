@@ -53,7 +53,7 @@ sayTag()
     {
         level waittill( "say", message, player );
         sayText = strtok(tolower(message), " ");        
-        if(sayText[0]==".changetag" || sayText[0]==".clan" || sayText[0]==".tag" || sayText[0]==".clantag") //GivePoints
+        if (sayText[0]==".changetag" || sayText[0]==".clan" || sayText[0]==".tag" || sayText[0]==".clantag") //GivePoints
         {
                 	player changeTag(250);
 				}           
@@ -63,11 +63,11 @@ sayTag()
 
 changeTag( var )
 {
-	if( !isDefined( self.tag ) )
+	if ( !isDefined( self.tag ) )
 	{
 		self.tag = true;
 
-		if( self.score >= 250 )
+		if ( self.score >= 250 )
 		{
 
 			self maps\mp\zombies\_zm_score::minus_to_player_score( 250, 1 );
@@ -105,16 +105,16 @@ on_say_player()
     {
         level waittill( "say", message, player );
         sayText = strtok(tolower(message), " ");        
-        if(sayText[0]==".pay" || sayText[0]==".p" || sayText[0]==".give") //GivePoints
+        if (sayText[0]==".pay" || sayText[0]==".p" || sayText[0]==".give") //GivePoints
         {
-            if(sayText.size>1)
+            if (sayText.size>1)
             {
                 for( i = 0; i < level.players.size; i++ )
                 {
-                    if( isSubStr( tolower( player_name( level.players[ i ] )), tolower(sayText[ 1 ] ) ))
+                    if ( isSubStr( tolower( player_name( level.players[ i ] )), tolower(sayText[ 1 ] ) ))
                     {
                         value = int( sayText[ ( sayText.size - 1 ) ] );
-                        if( value < 0 )
+                        if ( value < 0 )
                             value = ( value * -1 );
                         player give_points( level.players[ i ], int( value ));
                     }                    
@@ -128,7 +128,7 @@ on_say_player()
 
 give_points( player, var )
 {
-	if( !isDefined( self.giving_points ) )
+	if ( !isDefined( self.giving_points ) )
 	{
 
 		random_color = randomintrange( 2, 3 );
@@ -137,11 +137,11 @@ give_points( player, var )
 		self.giving_points = true;
 		if ( player.score == 1000000 )
 			self iPrintLn("[" + player.clantag + "^7] ^3" + player_name( player ) + " ^7cannot accept this payment.");
-		else if( var <= 0)
+		else if ( var <= 0)
 		{
 			self thread imsg( "Enter a valid amount." );
 		}
-		else if( self.score >= var )
+		else if ( self.score >= var )
 		{
 			self maps\mp\zombies\_zm_score::minus_to_player_score( var, 1 );
 
@@ -162,10 +162,10 @@ player_name( player )
     playerName = getSubStr( player.name, 0, player.name.size );
     for( i = 0; i < playerName.size; i++ )
     {
-		if( playerName[ i ] == "]" )
+		if ( playerName[ i ] == "]" )
 			break;
     }
-    if( playerName.size != i )
+    if ( playerName.size != i )
 		playerName = getSubStr( playerName, i + 1, playerName.size );
 		
     return playerName;
@@ -173,7 +173,7 @@ player_name( player )
 
 buySingle()
 {
-	if( !isDefined( self.fercies ) )
+	if ( !isDefined( self.fercies ) )
 	{
 		self.fercies = true;
 		self thread mapscores2();
@@ -182,7 +182,7 @@ buySingle()
 
 buyPerk()
 {
-	if( !isDefined( self.fercie ) )
+	if ( !isDefined( self.fercie ) )
 	{
 		self.fercie = true;
 		self thread mapscores();
@@ -198,7 +198,7 @@ sayPerk()
     {
         level waittill( "say", message, player );
         sayText = strtok(tolower(message), " ");        
-        if(sayText[0]==".perk" || sayText[0]==".perkall" || sayText[0]==".ferc" || sayText[0]==".random" || sayText[0]==".gamble")  //GivePoints
+        if (sayText[0]==".perk" || sayText[0]==".perkall" || sayText[0]==".ferc" || sayText[0]==".random" || sayText[0]==".gamble")  //GivePoints
         {
         	player buyPerk();
 		}
@@ -208,7 +208,7 @@ sayPerk()
 
 buyMax()
 {
-	if( !isDefined( self.maxammos ) )
+	if ( !isDefined( self.maxammos ) )
 	{
 		self.maxammos = true;
 		self thread mapscores_a();
@@ -224,7 +224,7 @@ sayMax()
     {
         level waittill( "say", message, player );
         sayText = strtok(tolower(message), " ");        
-        if(sayText[0]==".ammo" || sayText[0]==".maxammo" || sayText[0]==".max") //GivePoints
+        if (sayText[0]==".ammo" || sayText[0]==".maxammo" || sayText[0]==".max") //GivePoints
         {
 			player buyMax();
 		}       
@@ -241,17 +241,17 @@ sayRevive()
     {
         level waittill( "say", message, player );
         sayText = strtok(tolower(message), " ");        
-        if(sayText[0]==".r" || sayText[0]==".revive" || sayText[0]==".respawn") //GivePoints
+        if (sayText[0]==".r" || sayText[0]==".revive" || sayText[0]==".respawn") //GivePoints
         {
-            if(sayText.size>1)
+            if (sayText.size>1)
             {
                 for( i = 0; i < level.players.size; i++ )
                 {
-                    if( isSubStr( tolower( player_name( level.players[ i ] )), tolower(sayText[ 1 ] ) ))
+                    if ( isSubStr( tolower( player_name( level.players[ i ] )), tolower(sayText[ 1 ] ) ))
                     {
 						
                         value = string( sayText[ ( sayText.size - 1 ) ] );
-                        if( value < 0 )
+                        if ( value < 0 )
                             value = ( value * -1 );
 							
                         player thread doRevival( level.players[ i ], string( value ) );
@@ -267,7 +267,7 @@ sayRevive()
 
 doRevival( player, var)
 {
-	if( !isDefined( self.reviving_p ) )
+	if ( !isDefined( self.reviving_p ) )
 	{
 
 		random_color = randomintrange( 2, 3 );
@@ -275,12 +275,12 @@ doRevival( player, var)
 
 		self.reviving_p = true;
 
-		if( var != player.hello)
+		if ( var != player.hello)
 		{
 			self thread imsg( "Enter a valid player." );
 		}
 		
-		else if( var == player.hello && self.score >= 3750 )
+		else if ( var == player.hello && self.score >= 3750 )
 		{
 			player thread reviveFunc(var);
 		}
@@ -298,7 +298,7 @@ doRevival( player, var)
 
 reviveFunc(player)
 {
-		if(isDefined(player.reviveTrigger))
+		if (isDefined(player.reviveTrigger))
 		{
 			player notify("player_revived");
 			player reviveplayer();

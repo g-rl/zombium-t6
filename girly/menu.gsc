@@ -22,7 +22,7 @@ create_menu()
     // menu option("buy random weapon", ::randomWeaponz, true);
     menu option("night mode", ::toggle_night, true);
 
-    if(self isHost())
+    if (self isHost())
     {
         menu option("change game color", ::mapHudtoCycle, true);
     }

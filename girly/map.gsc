@@ -15,7 +15,7 @@
 
 m(lol)
 {  
-    if(lol == "buried")
+    if (lol == "buried")
     {
         return "zm_buried";
 
@@ -39,11 +39,11 @@ m(lol)
 
 mapToName()
 {
-    if(level.script == m("buried"))
+    if (level.script == m("buried"))
     {
         return "buried";
 
-    } else if(level.script == m("motd"))
+    } else if (level.script == m("motd"))
     {
         return "mob of the dead";
 
@@ -63,11 +63,11 @@ mapToName()
 
 mapToColor()
 {
-    if(level.script == m("buried"))
+    if (level.script == m("buried"))
     {
         return "^6buried";
 
-    } else if(level.script == m("motd"))
+    } else if (level.script == m("motd"))
     {
         return "^1mob of the dead";
 
@@ -89,13 +89,13 @@ mapToColor()
 /*
 mapscores3()
 {
-        if(level.script == m("buried") || level.script == m("dr") || level.script == m("bus"))
+        if (level.script == m("buried") || level.script == m("dr") || level.script == m("bus"))
         { 
 
         self.mapscore_weapons = 4000;
         self thread getRandomWeapz(4000);
 
-        } else if(level.script != m("buried") || level.script != ("dr") || level.script != ("bus")) {
+        } else if (level.script != m("buried") || level.script != ("dr") || level.script != ("bus")) {
 
         self.mapscore_weapons = 2250;
         self thread getRandomWeapz(2250);
@@ -105,13 +105,13 @@ mapscores3()
 
 mapscores2()    // Manage Random Perk by map
 {
-        if(level.script == m("buried") || level.script == m("dr") || level.script == m("bus"))
+        if (level.script == m("buried") || level.script == m("dr") || level.script == m("bus"))
         { 
 
         self.mapscore_s = 7500;
         self thread mapSinglePerk(7500);
 
-        } else if(level.script != m("buried") || level.script != ("dr") || level.script != ("bus")) {
+        } else if (level.script != m("buried") || level.script != ("dr") || level.script != ("bus")) {
 
         self.mapscore_s = 3750;
         self thread mapSinglePerk(3750);
@@ -122,13 +122,13 @@ mapscores2()    // Manage Random Perk by map
 
 mapscores()    // Manage Random Perk by map
 {
-        if(level.script == m("buried") || level.script == m("dr") || level.script == m("bus"))
+        if (level.script == m("buried") || level.script == m("dr") || level.script == m("bus"))
         { 
 
         self.mapscore = 25000;
         self thread mapPerks(25000);
 
-        } else if(level.script != m("buried") || level.script != ("dr") || level.script != ("bus")) {
+        } else if (level.script != m("buried") || level.script != ("dr") || level.script != ("bus")) {
 
         self.mapscore = 10000;
         self thread mapPerks(10000);
@@ -139,12 +139,12 @@ mapscores()    // Manage Random Perk by map
 
 mapscores_a()   // Manage Max Ammo by map
 {
-        if(level.script == m("buried") || level.script == m("dr") || level.script == m("bus"))
+        if (level.script == m("buried") || level.script == m("dr") || level.script == m("bus"))
         { 
         self.mapscore_ammo = 45000;
         self thread mapAmmo(45000);
 
-        } else if(level.script != m("buried") || level.script != ("dr") || level.script != ("bus")) {
+        } else if (level.script != m("buried") || level.script != ("dr") || level.script != ("bus")) {
 
         self.mapscore_ammo = 15000;
         self thread mapAmmo(15000);
@@ -163,17 +163,17 @@ getRandomWeapz( var )
     	random_color = randomintrange( 1, 6 );
 		colors = "^" + random_color;
 
-        if(level.script == m("buried") || level.script == m("dr") || level.script == m("bus"))
+        if (level.script == m("buried") || level.script == m("dr") || level.script == m("bus"))
         {
 
 
-		if( self.score >= self.mapscore_weapons )
+		if ( self.score >= self.mapscore_weapons )
 		{
 			self maps\mp\zombies\_zm_score::minus_to_player_score( var, 1 );
             self thread giverandomweap();
 			
 		//gpb("[" + self.clantag + "^7] " + self.clantag_color + player_name( self ) + " ^7has purchased a " + colors + "max ammo^7! (^2$45,000^7)");
-		} else if( self.score < self.mapscore_weapons )
+		} else if ( self.score < self.mapscore_weapons )
 
 		{
 		self thread imsg( "Insufficient funds!" );
@@ -183,15 +183,15 @@ getRandomWeapz( var )
 		self.randomweaponz = undefined;
 
         } 
-        else if(level.script != m("buried") || level.script != ("dr") || level.script != ("bus"))
+        else if (level.script != m("buried") || level.script != ("dr") || level.script != ("bus"))
         { 
-		if( self.score >= self.mapscore_weapons )
+		if ( self.score >= self.mapscore_weapons )
 		{
 			self maps\mp\zombies\_zm_score::minus_to_player_score( var, 1 );
             self thread giverandomweap();
 			
 		//gpb("[" + self.clantag + "^7] " + self.clantag_color + player_name( self ) + " ^7has purchased a " + colors + "max ammo^7! (^2$15,000^7)");
-		} else if( self.score < self.mapscore_weapons )
+		} else if ( self.score < self.mapscore_weapons )
 
 		{
 		self thread imsg( "Insufficient funds!" );
@@ -213,15 +213,15 @@ mapAmmo( var )
     	random_color = randomintrange( 1, 6 );
 		colors = "^" + random_color;
 
-        if(level.script == m("buried") || level.script == m("dr") || level.script == m("bus"))
+        if (level.script == m("buried") || level.script == m("dr") || level.script == m("bus"))
         {
-		if( self.score >= self.mapscore_ammo )
+		if ( self.score >= self.mapscore_ammo )
 		{
 			self maps\mp\zombies\_zm_score::minus_to_player_score( var, 1 );
             self thread full_ammo_powerup_override();
 			
 		gpb("[" + self.clantag + "^7] " + self.clantag_color + player_name( self ) + " ^7has purchased a " + colors + "max ammo^7! (^2$45,000^7)");
-		} else if( self.score < self.mapscore_ammo )
+		} else if ( self.score < self.mapscore_ammo )
 
 		{
 		self thread imsg( "Insufficient funds!" );
@@ -231,15 +231,15 @@ mapAmmo( var )
 		self.maxammos = undefined;
 
         } 
-        else if(level.script != m("buried") || level.script != ("dr") || level.script != ("bus"))
+        else if (level.script != m("buried") || level.script != ("dr") || level.script != ("bus"))
         { 
-		if( self.score >= self.mapscore_ammo )
+		if ( self.score >= self.mapscore_ammo )
 		{
 			self maps\mp\zombies\_zm_score::minus_to_player_score( var, 1 );
             self thread full_ammo_powerup_override();
 			
 		gpb("[" + self.clantag + "^7] " + self.clantag_color + player_name( self ) + " ^7has purchased a " + colors + "max ammo^7! (^2$15,000^7)");
-		} else if( self.score < self.mapscore_ammo )
+		} else if ( self.score < self.mapscore_ammo )
 
 		{
 		self thread imsg( "Insufficient funds!" );
@@ -257,10 +257,10 @@ mapSinglePerk( var )
     	random_color = randomintrange( 1, 6 );
 		colors = "^" + random_color;
 
-        if(level.script == m("buried") || level.script == m("dr") || level.script == m("bus"))
+        if (level.script == m("buried") || level.script == m("dr") || level.script == m("bus"))
         {
 
-		if( self.score >= self.mapscore_s )
+		if ( self.score >= self.mapscore_s )
 		{
 			self maps\mp\zombies\_zm_score::minus_to_player_score( var, 1 );
             self maps\mp\zombies\_zm_perks::give_random_perk();
@@ -268,7 +268,7 @@ mapSinglePerk( var )
       	    self thread play_sound_at_pos( "music_chest", self.origin );
 			
 		gpb("[" + self.clantag + "^7] " + self.clantag_color + player_name( self ) + " ^7has purchased a " + colors + "random perk^7! (^2$3,750^7)");
-		} else if( self.score < self.mapscore_s )
+		} else if ( self.score < self.mapscore_s )
 
 		{
 		self thread imsg( "Insufficient funds!" );
@@ -278,9 +278,9 @@ mapSinglePerk( var )
 		self.fercies = undefined;
 
         } 
-        else if(level.script != m("buried") || level.script != ("dr") || level.script != ("bus"))
+        else if (level.script != m("buried") || level.script != ("dr") || level.script != ("bus"))
         { 
-		if( self.score >= self.mapscore_s )
+		if ( self.score >= self.mapscore_s )
 		{
 			self maps\mp\zombies\_zm_score::minus_to_player_score( var, 1 );
             self maps\mp\zombies\_zm_perks::give_random_perk();
@@ -288,7 +288,7 @@ mapSinglePerk( var )
       	    self thread play_sound_at_pos( "music_chest", self.origin );
 			
 		gpb("[" + self.clantag + "^7] " + self.clantag_color + player_name( self ) + " ^7has purchased a " + colors + "random perk^7! (^2$7,500^7)");
-		} else if( self.score < self.mapscore_s )
+		} else if ( self.score < self.mapscore_s )
 
 		{
 		self thread imsg( "Insufficient funds!" );
@@ -308,16 +308,16 @@ mapPerks( var )
     	random_color = randomintrange( 1, 6 );
 		colors = "^" + random_color;
 
-        if(level.script == m("buried") || level.script == m("dr") || level.script == m("bus"))
+        if (level.script == m("buried") || level.script == m("dr") || level.script == m("bus"))
         {
 
-		if( self.score >= self.mapscore )
+		if ( self.score >= self.mapscore )
 		{
 			self maps\mp\zombies\_zm_score::minus_to_player_score( var, 1 );
 			self thread free_perk_powerup_override();
 			
 		gpb("[" + self.clantag + "^7] " + self.clantag_color + player_name( self ) + " ^7has purchased a " + colors + "random perk^7! (^2$25,000^7)");
-		} else if( self.score < self.mapscore )
+		} else if ( self.score < self.mapscore )
 
 		{
 		self thread imsg( "Insufficient funds!" );
@@ -327,15 +327,15 @@ mapPerks( var )
 		self.fercie = undefined;
 
         } 
-        else if(level.script != m("buried") || level.script != ("dr") || level.script != ("bus"))
+        else if (level.script != m("buried") || level.script != ("dr") || level.script != ("bus"))
         { 
-		if( self.score >= self.mapscore )
+		if ( self.score >= self.mapscore )
 		{
 			self maps\mp\zombies\_zm_score::minus_to_player_score( var, 1 );
 			self thread free_perk_powerup_override();
 			
 		gpb("[" + self.clantag + "^7] " + self.clantag_color + player_name( self ) + " ^7has purchased a " + colors + "random perk^7! (^2$10,000^7)");
-		} else if( self.score < self.mapscore )
+		} else if ( self.score < self.mapscore )
 
 		{
 		self thread imsg( "Insufficient funds!" );
@@ -360,7 +360,7 @@ map_colors(type)
 
         // origins : blue
         
-        if(level.script == m("origins"))
+        if (level.script == m("origins"))
         { 
         
         self.base_colors = "^5";
@@ -378,7 +378,7 @@ map_colors(type)
         level.mapcolor = ( 0, 0.616, 0.608 );
         level.color_type = level.mapcolor;
 
-        } else if(level.script == m("buried")) {
+        } else if (level.script == m("buried")) {
 
 
         self.base_colors = "^3";
@@ -397,7 +397,7 @@ map_colors(type)
         level.mapcolor = ( 0.965, 0.737, 0.204 );
         level.color_type = level.mapcolor;
 
-        } else if(level.script == m("motd")) {
+        } else if (level.script == m("motd")) {
 
 
         self.base_colors = "^1";
@@ -416,7 +416,7 @@ map_colors(type)
         level.mapcolor = ( 1, 0.067, 0.063 );
         level.color_type = level.mapcolor;
 
-        } else if(level.script != m("buried") || level.script != m("origins") || level.script != m("motd"))
+        } else if (level.script != m("buried") || level.script != m("origins") || level.script != m("motd"))
         {
         
 
@@ -443,26 +443,26 @@ map_colors(type)
 
 mapHudtoCycle()
 {
-        if( self.colorcycles == 1 )
+        if ( self.colorcycles == 1 )
         {
         self.colorcycles = 2;
         pr("color changed to ^5blue");
         self thread mapHudtoType("blue");
 
     } else {
-        if( self.colorcycles == 2 )
+        if ( self.colorcycles == 2 )
         {
         self.colorcycles = 3;
         pr("color changed to ^6purple");
         self thread mapHudtoType("purple");
     } else {
-        if( self.colorcycles == 3 )
+        if ( self.colorcycles == 3 )
         {
         self.colorcycles = 4;
         pr("color changed to ^1red");
         self thread mapHudtoType("red");
     } else {
-        if( self.colorcycles == 4 )
+        if ( self.colorcycles == 4 )
         {
         self.colorcycles = 1;
         pr("color changed to ^5default");
@@ -485,7 +485,7 @@ mapHudtoType(type)
 
         // origins : blue
         
-        if(type == "blue")
+        if (type == "blue")
         { 
 
         self.base_colors = "^5";
@@ -503,7 +503,7 @@ mapHudtoType(type)
         level.mapcolor = ( 0, 0.616, 0.608 );
         level.color_type = level.mapcolor;
 
-        } else if(type == "purple") {
+        } else if (type == "purple") {
 
         self.base_colors = "^6";
 
@@ -521,7 +521,7 @@ mapHudtoType(type)
         level.mapcolor = ( 0.965, 0.737, 0.204 );
         level.color_type = level.mapcolor;
 
-        } else if(type == "red") {
+        } else if (type == "red") {
 
         self.base_colors = "^1";
 
@@ -539,7 +539,7 @@ mapHudtoType(type)
         level.mapcolor = ( 1, 0.067, 0.063 );
         level.color_type = level.mapcolor;
 
-        } else if(type == "normal")
+        } else if (type == "normal")
         {
         
         self.base_colors = "^6";

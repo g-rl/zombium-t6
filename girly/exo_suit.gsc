@@ -108,13 +108,13 @@
 
 toggle_exo()
 {
-	if(!isDefined(self.exosuits))
+	if (!isDefined(self.exosuits))
 	{
 		self.exosuits = true;
 		self thread exo_suit();
 		self thread imsg("exo suits ^6enabled");
 
-	} else if(isDefined(self.exosuits))
+	} else if (isDefined(self.exosuits))
 	{
 
 		self.exosuits = undefined;
@@ -138,9 +138,9 @@ exo_suit()
 	self thread monitor_exo_boost();
 	while(1)
 	{
-		if( !self IsOnGround() )
+		if ( !self IsOnGround() )
 		{
-			if(self JumpButtonPressed() || self SprintButtonPressed())
+			if (self JumpButtonPressed() || self SprintButtonPressed())
 			{
 				wait_network_frame();
 				continue;
@@ -150,7 +150,7 @@ exo_suit()
 			self.slam_boost = 0;
 			while( !self IsOnGround() )
 			{
-				if( self JumpButtonPressed() && self.jump_boost < 1 && self.exo_boost >= 20 )
+				if ( self JumpButtonPressed() && self.jump_boost < 1 && self.exo_boost >= 20 )
 				{
 					self.is_flying_jetpack = true;
 					self.jump_boost++;
@@ -159,7 +159,7 @@ exo_suit()
 					
 					self.loop_value = 2;
 					
-					if( IsDefined(self.loop_value))
+					if ( IsDefined(self.loop_value))
 					{
 						Earthquake( 0.22, .9, self.origin, 850 );
 						direction = AnglesToUp(angles) * 500;
@@ -173,23 +173,23 @@ exo_suit()
 					self.exo_boost -= 20;
 					self thread monitor_exo_boost();
 				}
-				if( self SprintButtonPressed() && self.sprint_boost < 1 && self.exo_boost >= 20 )
+				if ( self SprintButtonPressed() && self.sprint_boost < 1 && self.exo_boost >= 20 )
 				{
 					self.is_flying_jetpack = true;
 					self.sprint_boost++;
 					xvelo = self GetVelocity()[0];
 					yvelo = self GetVelocity()[1];
 					l = Length((xvelo, yvelo, 0));
-					if(l < 10)
+					if (l < 10)
 						continue;
-					if(l < 190)
+					if (l < 190)
 					{
 						xvelo = int(xvelo * 190/l);
 						yvelo = int(yvelo * 190/l);
 					}
 
 					Earthquake( 0.22, .9, self.origin, 850 );
-					if(self.jump_boost == 1)
+					if (self.jump_boost == 1)
 						boostAmount = 2.25;
 					else
 						boostAmount = 3;
@@ -200,7 +200,7 @@ exo_suit()
 					while( !self isOnGround() )
 						wait .05;
 				}
-				if( self StanceButtonPressed() && self.jump_boost > 0 && self.slam_boost < 1 && self HasPerk("specialty_rof") && self.exo_boost >= 30)
+				if ( self StanceButtonPressed() && self.jump_boost > 0 && self.slam_boost < 1 && self HasPerk("specialty_rof") && self.exo_boost >= 30)
 				{
 					self.slam_boost++;
 					self SetVelocity((self GetVelocity()[0], self GetVelocity()[1], -200));
@@ -210,7 +210,7 @@ exo_suit()
 				}
 				wait_network_frame();
 			}
-			if(self.slam_boost > 0)
+			if (self.slam_boost > 0)
 			{
 				self EnableInvulnerability();
 				RadiusDamage( self.origin, 200, 3000, 500, self, "MOD_GRENADE_SPLASH" );

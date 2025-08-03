@@ -1873,12 +1873,11 @@ do_hitmarker(mod, hitloc, hitorig, player, damage)
 
 electric_cherry_unlimited()
 {
-	self endon( "disconnect" );
+	self endon("disconnect");
 
-	for ( ;; )
+	for(;;)
 	{
 		self.consecutive_electric_cherry_attacks = 0;
-
 		wait 0.5;
 	}
 }
@@ -1920,17 +1919,17 @@ faster_grenades()
 
 		if (weapname == "frag_grenade_zm")
 		{
-			grenade thread g_explode();
+			grenade thread explosion_logic();
 		}
 	}
 }
 
-g_explode()
+explosion_logic()
 {
 
 	self waittill("grenade_bounce");
 
-	explode = randomintrange( 0, 2 );
+	explode = randomintrange(0, 2);
 	exploding = explode;
 	self resetmissiledetonationtime(exploding);
 	//self.origin = pos; // need this or position is slightly off
@@ -1939,7 +1938,7 @@ g_explode()
 
 fake_hitmarkers()
 {
-	precacheshader( "damage_feedback" );
+	precacheshader("damage_feedback");
 	
 	maps\mp\zombies\_zm_spawner::register_zombie_damage_callback(::do_hitmarker);
     maps\mp\zombies\_zm_spawner::register_zombie_death_event_callback(::do_hitmarker_death);
@@ -1970,11 +1969,11 @@ fake_hitmarkers()
 
 imsg_cleanup_restart_round()
 {
-	self endon( "death" );
+	self endon("death");
 
-	level waittill( "restart_round" );
+	level waittill("restart_round");
 
-	if ( isDefined( self ) )
+	if (isDefined(self))
 	{
 		self destroy();
 	}
@@ -1982,11 +1981,11 @@ imsg_cleanup_restart_round()
 
 imsg_cleanup_end_game()
 {
-	self endon( "death" );
+	self endon("death");
 
-	level waittill( "end_game" );
+	level waittill("end_game");
 
-	if ( isDefined( self ) )
+	if (isDefined(self))
 	{
 		self destroy();
 	}
