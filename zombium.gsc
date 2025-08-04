@@ -34,7 +34,7 @@ main()
 
 init()
 {
-	level.last_update = "august 1st 2025";
+	level.last_update = "august 3rd 2025";
 	// aat settings
     maps\mp\zombies\_zm_utility::onplayerconnect_callback(::watch_weapon_changes); 
     thread new_pap_trigger(); 
@@ -93,37 +93,32 @@ init()
 	level.zombie_vars["zombie_use_failsafe"] = 0;
 
 	// increase limit for powerup drops
-	level.zombie_vars["zombie_powerup_drop_max_per_round"] = 12;
-
+	level.current_powerups = 7;
+	level.zombie_vars["zombie_powerup_drop_max_per_round"] = 7;
+	set_zombie_var("zombie_powerup_drop_max_per_round", 7);
 	set_zombie_var("zombie_use_failsafe", 0);
-	set_zombie_var("zombie_powerup_drop_max_per_round", 12);
 	
 	level.limited_weapons = []; // everyone can get wonder weapons
 	level._limited_equipment = []; // everyone can get equipment
 	level.power_on = 1; // power is always on
 	level.a_e_slow_areas = []; // no mud slowdown on origins
-	// level.custom_magic_box_timer_til_despawn = ::time_until_despawn; // weapons dont disappear out of box
 	level.revive_trigger_should_ignore_sight_checks = ::revive_trigger_should_ignore_sight_checks;
-	level thread on_player_connect();
-    level thread fake_hitmarkers();
-	level thread cycle_box_price(); // cycle random box price
-	level thread setup_commands(); // command system (prefix is .)
-	level thread shared_box(); // allows for other people to pickup weapons
-	level thread new_round_hud();
-	level thread perk_machine_quarter_change(); // prone for perk points
-	level thread turn_on_powerr(); // always turn on power
-	level thread powerup_drop_override(); // higher chance to drop powerups
-	level thread fake_reset(); // reset game after 12h
-	level thread transit_power(); // remove lava pools & turn on power
-	level thread eye_color_watcher(); // watch zombie eye colors
-	if (getdvar("mapname") != "zm_buried") // dont init night mode on buried cause its way too dark
-		level thread night_mode();
+	// level.custom_magic_box_timer_til_despawn = ::time_until_despawn; // weapons dont disappear out of box
 
-	// unused for now
-	// level thread zombie_total(); // 24 zombies allowed to spawn at once
-	// level thread coop_pause(); // allows pausing game with multiple people (doesnt work rn)
-
-	// thread everything just in case cause shits trippin
+	thread on_player_connect();
+	thread increase_powerup_limits(); // change powerup limits as rounds go on
+    thread fake_hitmarkers();
+	thread cycle_box_price(); // cycle random box price
+	thread setup_commands(); // command system (prefix is .)
+	thread shared_box(); // allows for other people to pickup weapons
+	thread new_round_hud();
+	thread perk_machine_quarter_change(); // prone for perk points
+	thread turn_on_powerr(); // always turn on power
+	thread powerup_drop_override(); // higher chance to drop powerups
+	thread fake_reset(); // reset game after 12h
+	thread transit_power(); // remove lava pools & turn on power
+	thread eye_color_watcher(); // watch zombie eye colors
+	// thread everything below as well just in case cause shits trippin
     thread zm_override(); // override base game functions
     thread init_dvars(); // dvar settings
     thread init_wallbuy_changes(); // edit wallbuys
@@ -132,6 +127,13 @@ init()
 	thread disable_high_round_walkers(); // self explanitory
 	thread set_anim_pap_camo_dvars(); // motd camo on buried
 	thread electric_trap_damage(); // increase electric trap damage
+
+	if (getdvar("mapname") != "zm_buried") // dont init night mode on buried cause its way too dark
+		thread night_mode();
+
+	// unused for now
+	// level thread zombie_total(); // 24 zombies allowed to spawn at once
+	// level thread coop_pause(); // allows pausing game with multiple people (doesnt work rn)
 
 	// automatically build everything except for plane parts (motd)
 	flag_wait( "start_zombie_round_logic" );
@@ -162,33 +164,28 @@ on_player_spawned()
 	self endon("disconnect");
 
     self.first = true;
+	map = getdvar("mapname");
 
     for(;;)
     {
         self waittill("spawned_player");
-        self thread player_setup();
+        self thread player_setup(map);
 		flag_wait("initial_blackscreen_passed");
         self thread perk_setup();
 		self thread ammo_setup();
     }
 }
 
-player_setup()
+player_setup(map)
 {
-	map = getdvar("mapname");
-
 	self thread init_client_dvars();
 	self thread disable_player_quotes(); // disable annoying voice lines
 	self thread max_ammo_refill_clip(); // bo4 max ammo
-	self thread map_colors(); // colors for hud
 	self thread perk_points(); // give points when drinking perks
 	self thread war_machine_explode_on_impact(); // better war machine
 	self thread faster_grenades(); // faster grenade explosions
 	self thread give_starting_points(); // random starting points
-	self thread set_persistent_stats(); // give all perma perks
 	self thread better_nukes(randomint(24,35)); // give more points from nukes
-	// self thread rapid_fire(); // rapid fire for all guns
-	// self thread bind_monitor(); // for location pinging / dropping weapons
 
 	// set extra perks
 	self thread speed_perks();
@@ -204,6 +201,7 @@ player_setup()
 
 	if (isdefined(self.first) && self.first)
 	{
+		self thread map_colors(); // colors for hud
 		self thread dont_move_box();
 		self thread startup_vars();
 		self thread timer_hud(); // total game time timer
@@ -211,9 +209,10 @@ player_setup()
 		self thread graphic_tweaks();
 		self thread night_mode();
 		self thread rotate_skydome();
+		self thread set_persistent_stats(); // give all perma perks
 		self thread welcome_message();
 	}
-	self thread first_free_perks();
+	self thread first_free_perks(); // give a perk on spawn with a chance of 2 perks
 	self thread map_settings(map);
 }
 
@@ -249,10 +248,10 @@ startup_vars()
 	self setmaxhealth(health);
 	self.health = health;
 
-	self iprintln(self.clantag_color + "@nyli2b");
-	self iprintln("last update: " + self.clantag_color + level.last_update);
+	pr(self.clantag_color + "@nyli2b");
+	pr("last update: " + self.clantag_color + level.last_update);
 
-	if (self ishost())
+	if (self ishost()) // only init custom powerups for host
 		self thread start_custom_powerups();
 }
 
@@ -265,19 +264,19 @@ map_settings(map)
 			self thread carpenter_repair_shield(); // carpenter repairs shield
 			self thread tomb_give_shovel(); // auto give golden shovel and helmet
 			self thread electric_cherry_unlimited(); // electric cherry on every reload
-			self iprintln("[^3zombium^7] loaded 3 settings for ^5origins");
+			pr("loaded 3 settings for ^5origins");
 			break;
 		case "zm_prison": // motd
 			self thread give_tomahwak(); // auto give hells redeemer after 20ish seconds
 			self thread electric_cherry_unlimited(); // electric cherry on every reload
 			self thread afterlife(); // afterlife hand model at all times
-			self iprintln("[^3zombium^7] loaded 3 settings for ^1motd");
+			pr("loaded 3 settings for ^1motd");
 			break;
 		case "zm_buried":
-			self iprintln("[^3zombium^7] no special settings loaded for ^3buried");
+			pr("no special settings loaded for ^3buried");
 			break;
 		case "zm_highrise":
-			self iprintln("[^3zombium^7] no special settings loaded for ^2die rise");
+			pr("no special settings loaded for ^2die rise");
 			break;
 		default:
 			break;

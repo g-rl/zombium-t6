@@ -106,6 +106,47 @@
 #include scripts\zm\girly\menu;
 #include scripts\zm\girly\weapons;
 
+increase_powerup_limits()
+{
+	level endon("end_game");
+	level endon("game_ended");
+	for(;;)
+	{
+		level waittill("start_of_round");
+		level.current_powerups = level.zombie_vars["zombie_powerup_drop_max_per_round"];
+		switch(level.round_number)
+		{
+			case 5:
+				level.zombie_vars["zombie_powerup_drop_max_per_round"] = 8;
+				set_zombie_var("zombie_powerup_drop_max_per_round", 8);
+				level.current_powerups = level.zombie_vars["zombie_powerup_drop_max_per_round"];
+			case 10:
+				level.zombie_vars["zombie_powerup_drop_max_per_round"] = 10;
+				set_zombie_var("zombie_powerup_drop_max_per_round", 10);
+				level.current_powerups = level.zombie_vars["zombie_powerup_drop_max_per_round"];
+			case 15:
+				level.zombie_vars["zombie_powerup_drop_max_per_round"] = 12;
+				set_zombie_var("zombie_powerup_drop_max_per_round", 12);
+				level.current_powerups = level.zombie_vars["zombie_powerup_drop_max_per_round"];
+			case 20:
+				level.zombie_vars["zombie_powerup_drop_max_per_round"] = 14;
+				set_zombie_var("zombie_powerup_drop_max_per_round", 14);
+				level.current_powerups = level.zombie_vars["zombie_powerup_drop_max_per_round"];
+			case 25:
+				level.zombie_vars["zombie_powerup_drop_max_per_round"] = 15;
+				set_zombie_var("zombie_powerup_drop_max_per_round", 15);
+				level.current_powerups = level.zombie_vars["zombie_powerup_drop_max_per_round"];
+			case 30:
+				level.zombie_vars["zombie_powerup_drop_max_per_round"] = 17;
+				set_zombie_var("zombie_powerup_drop_max_per_round", 17);
+				level.current_powerups = level.zombie_vars["zombie_powerup_drop_max_per_round"];
+			default:
+				level.zombie_vars["zombie_powerup_drop_max_per_round"] = level.current_powerups;
+				set_zombie_var("zombie_powerup_drop_max_per_round", level.current_powerups);
+		}
+	}
+
+}
 on_player_downed()
 {
 	self endon("disconnect");
@@ -117,7 +158,8 @@ on_player_downed()
 
 		self waittill_any( "player_downed", "fake_death", "entering_last_stand");	
 		self thread play_sound_at_pos( "music_chest", self.origin );
-		// self thread maps\mp\animscripts\zm_death::flame_death_fx();
+		self thread bleeding();
+		self thread maps\mp\animscripts\zm_death::flame_death_fx();
 		
 		zone = self get_current_zone();
 		zone_name = get_zone_display_name(zone);
@@ -164,6 +206,8 @@ on_player_revived()
 				self setmaxhealth(self.myhealth);
 				self.health = self.myhealth;
 			}
+
+			self thread perk_setup();
 
 			if (map != "zm_buried" || map != "zm_highrise" || map != "zm_prison" || getdvar("g_gametype") != "zstandard")
 				self thread first_free_perks(); // give a perk or 2 back on maps with no perma perks

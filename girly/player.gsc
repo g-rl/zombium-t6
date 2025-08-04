@@ -1599,14 +1599,13 @@ bleeding()
 	self.bleed_r = true;
 	if (isDefined(self.bleed_r))
 	{
-	time = randomintrange( 40, 80 );
-	bleeding = time;
-	self.bleed_time = bleeding;
-
-    self setClientDvar( "player_lastStandBleedoutTime", self.bleed_time);
-	self.msg_r = "^1" + self.bleed_time + "s^7!";
-
-	self.bleed_r = undefined;
+		time = randomintrange( 65, 150 );
+		bleeding = time;
+		self.bleed_time = bleeding;
+		
+		self setClientDvar( "player_lastStandBleedoutTime", self.bleed_time);
+		self.msg_r = "^1" + self.bleed_time + "s^7!";
+		self.bleed_r = undefined;
 	}
 }
 
